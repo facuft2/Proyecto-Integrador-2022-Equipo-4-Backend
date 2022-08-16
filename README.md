@@ -1,6 +1,6 @@
 # ReUSO
 
-Backend del grupo 4 ReUSO, realizado en [Prisma](https://www.prisma.io/ [y] [Express](https://expressjs.com/es/).
+Backend del grupo 4 ReUSO, realizado en [Prisma](https://www.prisma.io/) y [Express](https://expressjs.com/es/).
 
 ## Tecnologias Usada
 
