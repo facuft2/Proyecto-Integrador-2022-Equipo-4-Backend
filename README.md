@@ -37,5 +37,5 @@ Express + Prisma
 
 - [Facundo Perez](https://www.github.com/facuft2)
 - [Mathias Sellanes](https://github.com/mathiassellanes)
-- [Arianna Ametrano(https://github.com/ariana-ametrano)
+- [Arianna Ametrano](https://github.com/ariana-ametrano)
 - [Camilo Danielli](...)
