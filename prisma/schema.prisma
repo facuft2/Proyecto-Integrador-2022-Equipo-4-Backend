@@ -9,3 +9,81 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Usuario {
+  id          Int @id @default(autoincrement())
+  nombre      String
+  apellido    String
+  email       String @unique
+  contrasenia  String
+  ultimo_acceso DateTime
+  descripcion String
+  tipo      Tipo @default(USER)
+  cant_intercambio Int @default(0)
+  foto_perfil Bytes
+  telefono    String @unique
+  usu_dir     UsuDir?
+  producto      Producto[]
+}
+
+model UsuDir {
+  user   Usuario @relation(fields: [user_id], references: [id])
+  user_id Int @id @default(autoincrement())
+  nro_puerta  Int
+  localidad   String
+  calle       String  
+}
+
+model Producto {
+  id          Int @id @default(autoincrement())
+  titulo      String
+  descripcion String
+  tipo_trato  TipoTrato
+  cantidad    Int @default(0)
+  foto        Bytes
+  usuario     Usuario @relation(fields: [id_pers], references: [id])
+  id_pers     Int
+  categoria   CateProducto[]
+  // intercambio Intercambio? @relation("Intercambio",fields: [id_producto], references: [id])
+
+ }
+
+model Categoria {
+  id          Int @id @default(autoincrement())
+  nombre      String @unique
+  producto    CateProducto[]
+}
+
+model CateProducto {
+  producto    Producto @relation(fields: [id_prod], references: [id])
+  categoria   Categoria @relation(fields: [id_cate], references: [id])
+  id_prod     Int @id @default(autoincrement())
+  id_cate     Int
+
+}
+
+model Intercambio {
+  // producto    Producto @relation(fields: [id_prod1,id_prod2], references: [id])
+  id          Int @id @default(autoincrement())
+  id_prod1    Int 
+  id_prod2    Int 
+  estado      Estado @default(ESPERANDO)
+  @@unique([id_prod1,id_prod2])
+}
+
+enum Tipo {
+  USER
+  ADMIN
+}
+
+enum TipoTrato {
+  INTERCAMBIO
+  DONACION
+}
+
+enum Estado {
+  ESPERANDO
+  ACEPTADO
+  RECHAZADO
+  CANCELADO
+}

@@ -1,0 +1,12 @@
+POST http://10.1.11.183:4000/usuarios
+Content-Type: application/json
+{
+    "nombre": "Juan",
+    "apellido": "Perez",
+    "email": "Juan@example.com",
+    "contrasenia": "12345",
+    "ultimo_acceso": "2020-01-01",
+    "descripcion": "Usuario de prueba",
+    "foto_perfil": "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
+    "telefono": "12345678"
+}
