@@ -2,7 +2,7 @@ const router = require("express").Router();
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
-const passport-jwt = require("passport-jwt");
+const passport = require("passport-jwt");
 
 router.post("/login", async (req, res) => {
     try {
@@ -29,7 +29,16 @@ router.post("/login", async (req, res) => {
 
 router.post("/signup", async (req, res) => {
     try {
-
+        res.json(await prisma.usuario.create({
+        data: {
+            ...req.body,
+            contrasenia: await bcrypt.hash(req.body.contrasenia, 10),
+        },
+        }));
+    } catch (error) {
+        res.json({ error: error.message });
     }
+});
+
 
 module.exports = router;

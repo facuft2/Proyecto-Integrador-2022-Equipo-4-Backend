@@ -1,5 +1,6 @@
 const express = require("express");
 const createError = require("http-errors");
+const users = require("./src/routes/api.users");
 require("dotenv").config();
 
 const app = express();
@@ -8,7 +9,7 @@ const port = process.env.PORT || 4000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/", require("./src/routes/api.route"));
+app.use("/users", users);
 
 app.use("/auth/", require("./src/routes/api.routeauth"));
 

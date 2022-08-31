@@ -3,41 +3,34 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-router.get("/usuarios", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const usuarios = await prisma.usuario.findMany();
-    res.json(usuarios);
+    const usuarios = await prisma.User.findMany();
+  res.json(usuarios);
   } catch (error) {
     res.json({ error: error.message });
   }
 });
 
-router.post("/usuarios", async (req, res) => {
+router.post("/", async ({ body }, res) => {
   try {
     const {
       nombre,
       apellido,
       email,
       contrasenia,
-      ultimo_acceso,
-      descripcion,
-      foto_perfil,
-      telefono,
-    } = req.body;
-    const usuario = await prisma.usuario.create({
+    } = body;
+    const usuario = await prisma.User.create({
       data: {
         nombre,
         apellido,
         email,
         contrasenia,
-        ultimo_acceso,
-        descripcion,
-        foto_perfil,
-        telefono,
       },
     });
     res.json(usuario);
   } catch (error) {
+    console.log(error)
     res.json({ error: error.message });
   }
 });

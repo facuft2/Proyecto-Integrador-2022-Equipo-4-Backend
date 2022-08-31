@@ -10,78 +10,71 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuario {
-  id          Int @id @default(autoincrement())
-  nombre      String
-  apellido    String
-  email       String @unique
-  contrasenia  String
-  ultimo_acceso DateTime
-  descripcion String
-  tipo      Tipo @default(USER)
+model User {
+  id            Int @id @default(autoincrement())
+  nombre        String
+  apellido      String
+  email         String @unique
+  contrasenia   String
+  ultimo_acceso DateTime?
+  nro_puerta    Int?
+  localidad   String?
+  calle       String?
+  descripcion String?
+  tipo      type @default(USER)
   cant_intercambio Int @default(0)
-  foto_perfil Bytes
-  telefono    String @unique
-  usu_dir     UsuDir?
-  producto      Producto[]
+  foto_perfil Bytes?
+  telefono    String? @unique
+  producto    Product[]
 }
 
-model UsuDir {
-  user   Usuario @relation(fields: [user_id], references: [id])
-  user_id Int @id @default(autoincrement())
-  nro_puerta  Int
-  localidad   String
-  calle       String  
-}
-
-model Producto {
+model Product {
   id          Int @id @default(autoincrement())
   titulo      String
   descripcion String
-  tipo_trato  TipoTrato
+  tipo_trato  DealType
   cantidad    Int @default(0)
   foto        Bytes
-  usuario     Usuario @relation(fields: [id_pers], references: [id])
-  id_pers     Int
-  categoria   CateProducto[]
+  usuario     User @relation(fields: [userId], references: [id])
+  userId     Int @unique
+  categoria   CatProduct[]
+  catProductId Int @unique
   // intercambio Intercambio? @relation("Intercambio",fields: [id_producto], references: [id])
-
  }
 
-model Categoria {
+model Category {
   id          Int @id @default(autoincrement())
   nombre      String @unique
-  producto    CateProducto[]
+  producto    CatProduct[]
 }
 
-model CateProducto {
-  producto    Producto @relation(fields: [id_prod], references: [id])
-  categoria   Categoria @relation(fields: [id_cate], references: [id])
+model CatProduct {
   id_prod     Int @id @default(autoincrement())
   id_cate     Int
-
+  producto    Product @relation(fields: [id_prod], references: [id])
+  categoria   Category @relation(fields: [id_cate], references: [id])
 }
 
-model Intercambio {
+model Exchange {
   // producto    Producto @relation(fields: [id_prod1,id_prod2], references: [id])
   id          Int @id @default(autoincrement())
   id_prod1    Int 
   id_prod2    Int 
-  estado      Estado @default(ESPERANDO)
+  estado      State @default(ESPERANDO)
   @@unique([id_prod1,id_prod2])
 }
 
-enum Tipo {
+enum type {
   USER
   ADMIN
 }
 
-enum TipoTrato {
+enum DealType {
   INTERCAMBIO
   DONACION
 }
 
-enum Estado {
+enum State {
   ESPERANDO
   ACEPTADO
   RECHAZADO

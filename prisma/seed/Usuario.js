@@ -1,7 +1,7 @@
-import { PrismaClient } from '@prisma/client';
-import {faker} from '@faker-js/faker';
-import * as dotenv from 'dotenv';
-import fs from 'fs';
+const { PrismaClient } = require('@prisma/client');
+const { faker } = require('@faker-js/faker');
+require('dotenv').config();
+const fs = require('fs');
 
 const filepath = path.resolve(__dirname, './items/picDemo.jpg');
 const profilfoePicture = Buffer.from(fs.readFileSync(filepath));
