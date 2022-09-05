@@ -11,7 +11,7 @@ const validateInput = (inputValidator, ctx = 'body') => (req, res, next) => {
   for data: ${typeof req.body === 'object' ? JSON.stringify(req.body) : req.body}`);
 
     return res.status(400).send({
-      error: validate.errors[0].message,
+      code: validate.errors[0].message,
     });
   }
 

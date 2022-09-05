@@ -1,17 +1,30 @@
 const express = require("express");
+const morgan = require("morgan");
+const passport = require("passport")
 const createError = require("http-errors");
+
 const users = require("./src/routes/api.users");
+const auth = require("./src/routes/api.routeauth");
+const products = require("./src/routes/api.products");
+const cors = require("cors");
+
+require('./src/config/loginCheck')
 require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT || 4000;
 
+app.use(passport.initialize());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+
+app.use("/", auth);
+app.use("/product", products);
 app.use("/users", users);
-
-app.use("/auth/", require("./src/routes/api.routeauth"));
 
 
 app.use((req, res, next) => {
