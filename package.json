@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "prisma": {
-    "seed": "node ./prisma/seed/Usuario.js"
+    "seed": "node ./prisma/seed/Index.js"
   },
   "scripts": {
     "start": "nodemon app.js",
