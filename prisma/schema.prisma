@@ -62,7 +62,8 @@ model Intercambio {
   producto_recibido       Producto @relation("ProductoRecibido", fields: [id_producto_recibido], references: [id])
   id_producto_enviado     Int 
   id_producto_recibido    Int
-  message                 String
+  mensaje                 String
+  fecha                   DateTime
   estado                  Estado @default(ESPERANDO)
 }
 
