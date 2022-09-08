@@ -36,7 +36,7 @@ model Producto {
   cantidad    Int @default(0)
   foto        Bytes?
   usuario     Usuario? @relation(fields: [userId], references: [id])
-  userId     Int @unique
+  userId      Int
   categoria   CatProducto[]
   intercambioEnviado Intercambio[] @relation("ProductoEnviado")
   intercambioRecibido Intercambio[] @relation("ProductoRecibido")
@@ -49,22 +49,21 @@ model Categoria {
 }
 
 model CatProducto {
-  id_prod     Int @id @default(autoincrement())
+  id          Int @id @default(autoincrement())
+  id_prod     Int
   id_cate     Int
   producto    Producto @relation(fields: [id_prod], references: [id])
   categoria   Categoria @relation(fields: [id_cate], references: [id])
 }
 
 model Intercambio {
-  // producto    Producto @relation(fields: [id_prod1, id_prod2], references: [id])
-  id          Int @id @default(autoincrement())
-  producto_enviado Producto @relation("ProductoEnviado", fields: [id_producto_enviado], references: [id])
-  producto_recibido Producto @relation("ProductoRecibido", fields: [id_producto_recibido], references: [id])
-  id_producto_enviado    Int 
-  id_producto_recibido   Int
-  estado      Estado @default(ESPERANDO)
-  
-  @@unique([id_producto_enviado, id_producto_recibido])
+  id                      Int @id @default(autoincrement())
+  producto_enviado        Producto @relation("ProductoEnviado", fields: [id_producto_enviado], references: [id])
+  producto_recibido       Producto @relation("ProductoRecibido", fields: [id_producto_recibido], references: [id])
+  id_producto_enviado     Int 
+  id_producto_recibido    Int
+  message                 String
+  estado                  Estado @default(ESPERANDO)
 }
 
 enum Tipo {

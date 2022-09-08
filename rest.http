@@ -5,7 +5,12 @@ Content-Type: application/json
     "nombre": "Juan",
     "apellido": "Perez",
     "email": "Juan@example.com",
-    "contrasenia": "12345"
+    "contrasenia": "12345678"
+}
+
+{
+    "email": "Juan@example.com",
+    "contrasenia": "12345678"
 }
 
 {

@@ -6,6 +6,7 @@ const validator = require('./validators/postUser');
 const { RESULT_CODES } = require("../utils/index");
 
 const { getUsers, createUser, editUser } = require("../business/user");
+const { getUserByProps } = require("../dataaccess/user");
 
 require('../config/loginCheck')
 
@@ -20,6 +21,23 @@ router.get(
     res.json({ error: error.message });
   }
 });
+
+router.get(
+  '/:id',
+  passport.authenticate('jwt', { session: false }),
+  async ({params: { id }}, res) => {
+    try {
+      const usuarios = await getUserByProps({id: parseInt(id, 10)});
+
+      res.status(200).send({usuarios})
+
+    } catch (error) {
+      res.status(500).send({error: error.message})
+    }
+
+
+  }
+)
 
 router.post(
   "/",

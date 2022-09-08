@@ -6,6 +6,8 @@ const createError = require("http-errors");
 const users = require("./src/routes/api.users");
 const auth = require("./src/routes/api.routeauth");
 const products = require("./src/routes/api.products");
+const ExchangeProduct = require("./src/routes/api.exchange")
+const category = require("./src/routes/api.category")
 const cors = require("cors");
 
 require('./src/config/loginCheck')
@@ -23,7 +25,9 @@ app.use(cors());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
 app.use("/", auth);
+app.use('/category', category)
 app.use("/product", products);
+app.use("/exchange", ExchangeProduct)
 app.use("/users", users);
 
 

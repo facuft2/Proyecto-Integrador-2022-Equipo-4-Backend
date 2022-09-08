@@ -6,7 +6,7 @@ const createProduct = async ({
   descripcion,
   tipo_trato,
   foto,
-  usuario,
+  cantidad,
   userId
 }) => {
   try {
@@ -15,7 +15,7 @@ const createProduct = async ({
       descripcion,
       tipo_trato,
       foto,
-      usuario,
+      cantidad,
       userId,
     })
 
@@ -29,15 +29,29 @@ const getAllProducts = async () => {
   try {
     const products = await ProductDA.getAllProducts()
 
-    return products
+    const productClean = products.map((info) => ({
+      id: info.id,
+      titulo: info.titulo,
+      descripcion: info.descripcion,
+      tipo_trato: info.tipo_trato,
+      foto: info.foto,
+      cantidad: info.cantidad,
+      userId: info.userId,
+      categorias: info.categoria.map((info) => (
+        info.categoria.nombre
+      )),
+    }));
+
+    return productClean
   } catch (error) {
     throw new Error(error);
   }
 }
 
-const getProductById = async (id) => {
+const getProductById = async ({ id }) => {
   try {
-    const product = await ProductDA.getProductById(id);
+    console.log(id)
+    const product = await ProductDA.getProductById({ id });
 
     if (!product) {
       return {
@@ -54,7 +68,29 @@ const getProductById = async (id) => {
   }
 }
 
+const getProductsByCategory = async () => {
+  try {
+    const products = await ProductDA.getProductsByCategory()
+
+    const cleanProd = products.map(({nombre, producto}) => ({
+      categoria: nombre,
+      producto: producto.map((info) => (
+        info.producto
+      ))
+    }))
+
+    return {
+      Productos: cleanProd,
+      code: RESULT_CODES.SUCCESS
+    }
+  } catch (error) {
+    throw new Error(error)
+  }
+};
+
+
 module.exports = {
+  getProductsByCategory,
   createProduct,
   getAllProducts,
   getProductById,

@@ -2,15 +2,22 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-const createProduct = ({titulo, descripcion, tipo_trato, foto, usuario, userId,}) => {
+const createProduct = async ({
+  titulo,
+  descripcion,
+  tipo_trato,
+  cantidad,
+  foto,
+  userId,
+}) => {
   try {
-    const product = prisma.producto.create({
+    const product = await prisma.producto.create({
       data: {
         titulo,
         descripcion,
         tipo_trato,
         foto,
-        usuario,
+        cantidad,
         userId,
       }
     })
@@ -18,13 +25,51 @@ const createProduct = ({titulo, descripcion, tipo_trato, foto, usuario, userId,}
     return product
 
   } catch (error) {
+    console.log(error)
     throw new Error(error)
   }
 }
 
-const getAllProducts = () => {
+const getProductsByCategory = async () => {
   try {
-    const product = prisma.producto.findMany()
+    const products = await prisma.categoria.findMany({
+      select: {
+        nombre: true,
+        producto: {
+          select: {
+            id_prod: false,
+            id_cate: false,
+            producto: true,
+          },
+        }
+      }
+    })
+
+    return products
+  } catch (error) {
+    throw new Error(error)
+  }
+};
+
+
+const getAllProducts = async () => {
+  try {
+    const product = await prisma.producto.findMany({
+      include: {
+        categoria: {
+          select: {
+            id_prod: false,
+            id_cate: false,
+            categoria: {
+              select: {
+                nombre: true,
+                id: false
+              }
+            },
+          },
+        }
+      }
+    })
 
     return product
   } catch (error) {
@@ -32,14 +77,33 @@ const getAllProducts = () => {
   }
 }
 
-const getProductById = (id) => {
+const getProductById = async ({ id }) => {
   try {
-    const product = prisma.producto.findUnique({
-      where: {
-        id
+    id = parseInt(id, 10)
+    console.log(id)
+
+    const product = await prisma.producto.findUnique({
+      where: { id },
+      include: {
+        usuario: true
       }
+      // include: {
+        // intercambioEnviado: true,
+        // intercambioRecibido: true,
+        // categoria: {
+        //   include: {
+        //     categoria: {
+        //       nombre: true,
+        //       id: false
+        //     },
+        //     id_prod: false,
+        //     id_cate: false,
+        //     producto: false
+        //   }
+        // }
+      // }
     })
-    
+
     return product
   } catch (error) {
     throw new Error(error)
@@ -50,4 +114,5 @@ module.exports = {
   getProductById,
   createProduct,
   getAllProducts,
+  getProductsByCategory,
 }

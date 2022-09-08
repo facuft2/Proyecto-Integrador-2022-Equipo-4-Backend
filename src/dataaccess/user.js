@@ -5,7 +5,11 @@ const bcrypt = require("bcrypt");
 
 const getUsers = async () => {
   try {
-    return await prisma.Usuario.findMany();
+    return await prisma.Usuario.findMany({
+      include: {
+        Producto: true,
+      }
+    });
 
   } catch (error) {
     throw new Error(error);
@@ -16,6 +20,9 @@ const getUserByProps = async (props) => {
   try {
     return await prisma.Usuario.findUnique({
       where: props,
+      include: {
+        producto: true,
+      }
     });
   } catch (error) {
     throw new Error(error);

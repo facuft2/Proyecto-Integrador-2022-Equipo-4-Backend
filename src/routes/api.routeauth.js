@@ -15,7 +15,7 @@ router.post(
       username: currentUser.nombre,
       id: currentUser.id,
     };
-    const token = jwt.sign({ user: userForToken }, process.env.SECRET_KEY);
+    const token = jwt.sign({ user: userForToken }, process.env.SECRET_KEY, { });
     res.setHeader('token', token);
     res.status(200).send({
       user: userForToken,
