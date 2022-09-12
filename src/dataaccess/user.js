@@ -7,7 +7,7 @@ const getUsers = async () => {
   try {
     return await prisma.Usuario.findMany({
       include: {
-        Producto: true,
+        producto: true,
       }
     });
 

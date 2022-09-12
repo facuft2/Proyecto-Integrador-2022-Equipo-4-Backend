@@ -35,8 +35,6 @@ const editState = async ({ estado, id }) => {
       },
     })
 
-    console.log(exchange)
-
     return exchange
 
   } catch (error) {

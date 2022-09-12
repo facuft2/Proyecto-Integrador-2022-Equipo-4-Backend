@@ -28,7 +28,6 @@ router.put(
     try {
         const { params: {id}, body } = req;
         const exchange = await editExchangeState({...body, id});
-        console.log(exchange)
         res.status(200).send(exchange);
     } catch (error) {
         res.json({ error: error.message });

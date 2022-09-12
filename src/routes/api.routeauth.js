@@ -12,18 +12,15 @@ router.post(
   async ({ user }, res) => {
     const currentUser = user;
     const userForToken = {
+      email: currentUser.email,
       username: currentUser.nombre,
       id: currentUser.id,
     };
+
     const token = jwt.sign({ user: userForToken }, process.env.SECRET_KEY, { });
-    res.setHeader('token', token);
-    res.status(200).send({
-      user: userForToken,
-    });
+   
+    res.header('Authorization', `Bearer ${token}`).send({ user: currentUser });
   }
 );
-
-
-
 
 module.exports = router;

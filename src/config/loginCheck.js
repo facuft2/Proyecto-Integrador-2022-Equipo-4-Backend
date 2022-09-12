@@ -12,6 +12,7 @@ passport.use(
   }, async (token, done) => {
     try {
       const currentUser = await prisma.Usuario.findUnique({ where: { id: token.user.id } });
+
       return done(null, currentUser);
     } catch (error) {
       return done(error);

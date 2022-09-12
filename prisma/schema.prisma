@@ -11,34 +11,34 @@ datasource db {
 }
 
 model Usuario {
-  id            Int @id @default(autoincrement())
-  nombre        String
-  apellido      String
-  email         String @unique
-  contrasenia   String
-  ultimo_acceso DateTime?
-  nro_puerta    Int?
-  localidad   String?
-  calle       String?
-  descripcion String?
-  tipo        Tipo @default(USER)
-  cant_intercambio Int @default(0)
-  foto_perfil Bytes?
-  telefono    String? @unique
-  producto    Producto[]
+  id                Int @id @default(autoincrement())
+  nombre            String
+  apellido          String
+  email             String @unique
+  contrasenia       String
+  ultimo_acceso     DateTime?
+  nro_puerta        Int?
+  localidad         String?
+  calle             String?
+  descripcion       String?
+  tipo              Tipo @default(USER)
+  cant_intercambio  Int @default(0)
+  foto_perfil       String? @db.LongText
+  telefono          String? @unique
+  producto          Producto[]
 }
 
 model Producto {
-  id          Int @id @default(autoincrement())
-  titulo      String
-  descripcion String
-  tipo_trato  TipoTrato
-  cantidad    Int @default(0)
-  foto        Bytes?
-  usuario     Usuario? @relation(fields: [userId], references: [id])
-  userId      Int
-  categoria   CatProducto[]
-  intercambioEnviado Intercambio[] @relation("ProductoEnviado")
+  id                  Int @id @default(autoincrement())
+  titulo              String
+  descripcion         String
+  tipo_trato          TipoTrato
+  cantidad            Int @default(0)
+  foto                String @db.LongText
+  usuario             Usuario? @relation(fields: [userId], references: [id])
+  userId              Int
+  categoria           CatProducto[]
+  intercambioEnviado  Intercambio[] @relation("ProductoEnviado")
   intercambioRecibido Intercambio[] @relation("ProductoRecibido")
  }
 
@@ -62,7 +62,8 @@ model Intercambio {
   producto_recibido       Producto @relation("ProductoRecibido", fields: [id_producto_recibido], references: [id])
   id_producto_enviado     Int 
   id_producto_recibido    Int
-  message                 String
+  mensaje                 String?
+  fecha                   DateTime @default(now())
   estado                  Estado @default(ESPERANDO)
 }
 

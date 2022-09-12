@@ -80,7 +80,6 @@ const getAllProducts = async () => {
 const getProductById = async ({ id }) => {
   try {
     id = parseInt(id, 10)
-    console.log(id)
 
     const product = await prisma.producto.findUnique({
       where: { id },
@@ -110,7 +109,22 @@ const getProductById = async ({ id }) => {
   }
 }
 
+const getMyProducts = async ({userId}) => {
+  try {
+    const products = prisma.producto.findMany({
+      where: {
+        userId
+      }
+    })
+
+    return products
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 module.exports = {
+  getMyProducts,
   getProductById,
   createProduct,
   getAllProducts,

@@ -1,4 +1,5 @@
 const ProductDA = require('../dataaccess/product');
+const UserDA = require('../dataaccess/user')
 const { RESULT_CODES } = require('../utils/index')
 
 const createProduct = async ({
@@ -50,7 +51,6 @@ const getAllProducts = async () => {
 
 const getProductById = async ({ id }) => {
   try {
-    console.log(id)
     const product = await ProductDA.getProductById({ id });
 
     if (!product) {
@@ -88,8 +88,29 @@ const getProductsByCategory = async () => {
   }
 };
 
+const getMyProducts = async ({userId}) => {
+  try {
+
+    if (!await UserDA.getUserByProps({id: userId})) {
+      return {
+        code: RESULT_CODES.USER_NOT_FOUND
+      }
+    }
+
+    const products = await ProductDA.getMyProducts({userId})
+
+    return {
+      productos: products,
+      code: RESULT_CODES.SUCCESS
+    }
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 
 module.exports = {
+  getMyProducts,
   getProductsByCategory,
   createProduct,
   getAllProducts,

@@ -14,8 +14,6 @@ const randomDealType = () => {
     return dealTypes[generateRandomNumber(0, 1)];
 };
 
-
-
 const fakerUser = () => {
     return{
     nombre: faker.name.firstName(),
