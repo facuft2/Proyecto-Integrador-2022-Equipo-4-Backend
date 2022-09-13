@@ -87,6 +87,8 @@ const editUser = async ({
         telefono,
       },
     });
+
+    console.log(user)
     return user;
   } catch (error) {
     throw new Error(error);

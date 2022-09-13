@@ -17,7 +17,7 @@ const createProduct = async ({
       tipo_trato,
       foto,
       cantidad,
-      userId,
+      userId
     })
 
     return product
@@ -68,9 +68,9 @@ const getProductById = async ({ id }) => {
   }
 }
 
-const getProductsByCategory = async () => {
+const getProductsByCategory = async ({userId}) => {
   try {
-    const products = await ProductDA.getProductsByCategory()
+    const products = await ProductDA.getProductsByCategory({userId})
 
     const cleanProd = products.map(({nombre, producto}) => ({
       categoria: nombre,

@@ -19,9 +19,13 @@ const createProduct = async ({
         foto,
         cantidad,
         userId,
+        categoria: {
+          create: {
+            id_cate: 2
+          }
+        }
       }
     })
-
     return product
 
   } catch (error) {
@@ -30,20 +34,30 @@ const createProduct = async ({
   }
 }
 
-const getProductsByCategory = async () => {
+const getProductsByCategory = async ({ userId }) => {
   try {
     const products = await prisma.categoria.findMany({
+      where: {
+        producto: {
+          some: {
+          id_cate: 1
+          }
+        }
+      },
       select: {
         nombre: true,
         producto: {
           select: {
             id_prod: false,
             id_cate: false,
-            producto: true,
+            producto: true
           },
         }
       }
     })
+
+    console.log(products
+    )
 
     return products
   } catch (error) {
@@ -52,7 +66,7 @@ const getProductsByCategory = async () => {
 };
 
 
-const getAllProducts = async () => {
+const getAllProducts = async ({ userId }) => {
   try {
     const product = await prisma.producto.findMany({
       include: {
@@ -61,11 +75,10 @@ const getAllProducts = async () => {
             id_prod: false,
             id_cate: false,
             categoria: {
-              select: {
-                nombre: true,
-                id: false
+              userId: {
+                not: userId
               }
-            },
+            }
           },
         }
       }
@@ -87,19 +100,19 @@ const getProductById = async ({ id }) => {
         usuario: true
       }
       // include: {
-        // intercambioEnviado: true,
-        // intercambioRecibido: true,
-        // categoria: {
-        //   include: {
-        //     categoria: {
-        //       nombre: true,
-        //       id: false
-        //     },
-        //     id_prod: false,
-        //     id_cate: false,
-        //     producto: false
-        //   }
-        // }
+      // intercambioEnviado: true,
+      // intercambioRecibido: true,
+      // categoria: {
+      //   include: {
+      //     categoria: {
+      //       nombre: true,
+      //       id: false
+      //     },
+      //     id_prod: false,
+      //     id_cate: false,
+      //     producto: false
+      //   }
+      // }
       // }
     })
 
@@ -109,7 +122,7 @@ const getProductById = async ({ id }) => {
   }
 }
 
-const getMyProducts = async ({userId}) => {
+const getMyProducts = async ({ userId }) => {
   try {
     const products = prisma.producto.findMany({
       where: {

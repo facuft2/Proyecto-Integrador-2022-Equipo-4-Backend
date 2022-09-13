@@ -9,9 +9,8 @@ require('../config/loginCheck')
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
+  async ({body, user}, res) => {
     try {
-      const { body, user } = req;
       const product = await createProduct({ ...body, userId: parseInt(user.id, 10) });
 
       res.status(200).send({ product });
@@ -38,9 +37,9 @@ router.get(
 router.get(
   '/categories',
   passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
+  async ({user}, res) => {
     try {
-      const products = await getProductsByCategory()
+      const products = await getProductsByCategory({userId: parseInt(user.id, 10)})
 
       res.status(200).send(products)
     } catch (error) {
