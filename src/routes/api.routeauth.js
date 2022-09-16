@@ -19,7 +19,7 @@ router.post(
       id: currentUser.id,
     };
 
-    const token = jwt.sign({ user: userForToken }, process.env.SECRET_KEY, { });
+    const token = jwt.sign({ user: userForToken }, process.env.SECRET_KEY, {});
    
     res.header('Authorization', `Bearer ${token}`).send({ user: currentUser });
   }

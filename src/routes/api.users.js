@@ -29,7 +29,19 @@ router.get(
     try {
       const usuarios = await getUserByProps({id: parseInt(id, 10)});
 
-      res.status(200).send({usuarios})
+      console.log(usuarios)
+
+      const userForToken = {
+        email: usuarios.email,
+        username: usuarios.nombre,
+        id: usuarios.id,
+      };
+
+      console.log(userForToken)
+  
+      const token = jwt.sign({ user: userForToken }, process.env.SECRET_KEY, {});
+    
+      res.status(200).header('Authorization', `Bearer ${token}`).send('User created')
 
     } catch (error) {
       res.status(500).send({error: error.message})
@@ -45,6 +57,7 @@ router.post(
   async ({ body }, res) => {
     try {
       const usuario = await createUser(body);
+      
 
       switch (usuario.code) {
         case RESULT_CODES.EMAIL_ALREADY_REGISTERED:
