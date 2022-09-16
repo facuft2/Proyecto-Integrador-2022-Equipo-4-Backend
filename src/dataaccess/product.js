@@ -40,7 +40,11 @@ const getProductsByCategory = async ({ userId }) => {
       where: {
         producto: {
           some: {
-          id_cate: 1
+            producto: {
+              isNot: {
+                userId
+              }
+            }
           }
         }
       },

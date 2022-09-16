@@ -14,7 +14,7 @@ require('./src/config/loginCheck')
 require("dotenv").config();
 
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4001;
 
 app.use(passport.initialize());
 
@@ -22,8 +22,9 @@ app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({ extended: false }));
 app.use(cors(
     {
-    exposedHeaders: 'Authorization'
-}
+    exposedHeaders: 'Authorization',
+    origin: 'http://192.168.1.14:3000'
+    }
 ));
 
 app.use(morgan('dev'));

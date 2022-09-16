@@ -74,9 +74,9 @@ const getProductsByCategory = async ({userId}) => {
 
     const cleanProd = products.map(({nombre, producto}) => ({
       categoria: nombre,
-      producto: producto.map((info) => (
-        info.producto
-      ))
+      producto: producto.map(({producto}) => (
+        producto.userId !== userId ? producto : []
+      )).flat()
     }))
 
     return {

@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 const passport = require('passport');
 const loginMiddleware = require("../middlewares/logincheck") 
 
+require("dotenv").config();
+
 router.post(
   '/login',
   loginMiddleware,
