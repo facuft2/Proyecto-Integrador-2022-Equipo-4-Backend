@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
 const inputValidator = require("../middlewares/inputValidator");
 const validator = require('./validators/postUser');
@@ -29,20 +30,7 @@ router.get(
     try {
       const usuarios = await getUserByProps({id: parseInt(id, 10)});
 
-      console.log(usuarios)
-
-      const userForToken = {
-        email: usuarios.email,
-        username: usuarios.nombre,
-        id: usuarios.id,
-      };
-
-      console.log(userForToken)
-  
-      const token = jwt.sign({ user: userForToken }, process.env.SECRET_KEY, {});
-    
-      res.status(200).header('Authorization', `Bearer ${token}`).send('User created')
-
+      res.status(200).send(usuarios);
     } catch (error) {
       res.status(500).send({error: error.message})
     }
@@ -56,14 +44,15 @@ router.post(
   inputValidator(validator),
   async ({ body }, res) => {
     try {
-      const usuario = await createUser(body);
-      
+      const {user, code} = await createUser(body);
 
-      switch (usuario.code) {
+      switch (code) {
         case RESULT_CODES.EMAIL_ALREADY_REGISTERED:
-          return res.status(401).send({ error: usuario.code });
+          return res.status(401).send({ error: code });
         case RESULT_CODES.SUCCESS:
-          return res.status(201).send(usuario);
+          const token = jwt.sign({ user }, process.env.SECRET_KEY, {});
+    
+          return res.status(201).header('Authorization', `Bearer ${token}`).send({user})
         default:
           return res.status(500).send({ error: "Internal server error" });
       }
