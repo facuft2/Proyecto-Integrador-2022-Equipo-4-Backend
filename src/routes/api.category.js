@@ -2,8 +2,7 @@ const router = require("express").Router();
 const passport = require('passport');
 
 const { RESULT_CODES } = require("../utils/index");
-const { getCategory } = require("../dataaccess/category")
-const { createCategory, createCatProduct,  } = require("../business/category");
+const { createCategory, createCatProduct, getCategory } = require("../business/category");
 
 require('../config/loginCheck')
 
@@ -14,8 +13,35 @@ router.post(
     try {
       const category = await createCategory({nombre})
 
-      res.status(200).send(category)
+      switch (category.code) {
+        case RESULT_CODES.CATEGORY_ALREADY_REGISTERED:
+          return res.status(401).send({ error: category.code });
+        case RESULT_CODES.SUCCESS:
+          return res.status(201).send({category})
+        default:
+          return res.status(500).send({ error: "Internal server error" });
+      }
     } catch (error) {
+      throw new Error(error)
+    }
+  }
+)
+
+router.get(
+  '/', 
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const category = await getCategory()
+
+      switch (category.code) {
+        case RESULT_CODES.SUCCESS:
+          return res.status(200).send(category)
+        default:
+          return res.status(500).send({ error: "Internal server error" });
+      }
+    }
+    catch (error) {
       throw new Error(error)
     }
   }
