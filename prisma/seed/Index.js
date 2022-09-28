@@ -2,6 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const { faker } = require('@faker-js/faker');
 require('dotenv').config();
 const fs = require('fs');
+const bcrypt = require('bcrypt');
 
 const prisma = new PrismaClient();
 
@@ -14,12 +15,16 @@ const randomDealType = () => {
     return dealTypes[generateRandomNumber(0, 1)];
 };
 
+const password = 'password';
+
+const hash = bcrypt.hashSync(password, 10);
+
 const fakerUser = () => {
     return{
     nombre: faker.name.firstName(),
     apellido: faker.name.lastName(),
     email: faker.internet.email(),
-    contrasenia: faker.internet.password(),
+    contrasenia: hash,
     ultimo_acceso: faker.date.recent(),
     descripcion: faker.lorem.paragraph(),
     telefono: faker.phone.number()
@@ -44,6 +49,7 @@ const fakerProduct = () => {
         titulo: faker.commerce.productName(),
         descripcion: faker.lorem.paragraph(),
         tipo_trato: randomDealType(),
+        foto: 'https://picsum.photos/200/300',
         cantidad: generateRandomNumber(1, 10),
         userId: generateRandomNumber(1, 10)
     }
@@ -68,7 +74,7 @@ async function main() {
         });
         console.log(producto);
     }
-    //generate categories
+
     const categories = await prisma.categoria.createMany({
         data: [
             { nombre: 'Electrónica' },
