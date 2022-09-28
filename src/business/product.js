@@ -1,6 +1,7 @@
 const ProductDA = require('../dataaccess/product');
 const UserDA = require('../dataaccess/user')
 const { RESULT_CODES } = require('../utils/index')
+const AWS = require('aws-sdk')
 
 const createProduct = async ({
   titulo,
@@ -11,6 +12,8 @@ const createProduct = async ({
   userId
 }) => {
   try {
+
+
     const product = await ProductDA.createProduct({
       titulo,
       descripcion,
@@ -68,13 +71,32 @@ const getProductById = async ({ id }) => {
   }
 }
 
-const getProductsByCategory = async ({userId}) => {
+const getProductByFilter = async ({ id }) => {
   try {
-    const products = await ProductDA.getProductsByCategory({userId})
+    const product = await ProductDA.getProductById({ id });
 
-    const cleanProd = products.map(({nombre, producto}) => ({
+    if (!product) {
+      return {
+        code: RESULT_CODES.PRODUCT_NOT_FOUND,
+      }
+    }
+
+    return {
+      product,
+      code: RESULT_CODES.SUCCESS
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+const getProductsByCategory = async ({ userId }) => {
+  try {
+    const products = await ProductDA.getProductsByCategory({ userId })
+
+    const cleanProd = products.map(({ nombre, producto }) => ({
       categoria: nombre,
-      producto: producto.map(({producto}) => (
+      producto: producto.map(({ producto }) => (
         producto.userId !== userId ? producto : []
       )).flat()
     }))
@@ -88,16 +110,16 @@ const getProductsByCategory = async ({userId}) => {
   }
 };
 
-const getMyProducts = async ({userId}) => {
+const getMyProducts = async ({ userId }) => {
   try {
 
-    if (!await UserDA.getUserByProps({id: userId})) {
+    if (!await UserDA.getUserByProps({ id: userId })) {
       return {
         code: RESULT_CODES.USER_NOT_FOUND
       }
     }
 
-    const products = await ProductDA.getMyProducts({userId})
+    const products = await ProductDA.getMyProducts({ userId })
 
     return {
       productos: products,
@@ -115,4 +137,5 @@ module.exports = {
   createProduct,
   getAllProducts,
   getProductById,
+  getProductByFilter,
 }

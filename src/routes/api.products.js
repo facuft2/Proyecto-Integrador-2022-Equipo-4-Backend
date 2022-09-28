@@ -2,7 +2,7 @@ const router = require("express").Router();
 const passport = require('passport');
 
 const { RESULT_CODES } = require("../utils/index");
-const { createProduct, getProductById, getAllProducts, getProductsByCategory, getMyProducts} = require("../business/product");
+const { createProduct, getProductById, getAllProducts, getProductsByCategory, getMyProducts, getProductByFilter} = require("../business/product");
 
 require('../config/loginCheck')
 
@@ -65,6 +65,20 @@ router.get(
     }
   }
 )
+
+router.get(
+  '/filter/:param',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const product = await getProductByFilter();
+
+      res.status(200).send({ product });
+    } catch (error) {
+      res.json({ error: error.message });
+    }
+  },
+);
 
 router.get(
   '/:id',
