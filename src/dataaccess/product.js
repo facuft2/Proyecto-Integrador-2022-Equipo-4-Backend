@@ -140,10 +140,31 @@ const getMyProducts = async ({ userId }) => {
   }
 }
 
+const updateProduct = async ({ id, titulo, descripcion, tipo_trato, cantidad, foto, userId }) => {
+  try {
+    const product = await prisma.producto.update({
+      where: {
+        id,
+      },
+      data: {
+        titulo,
+        descripcion,
+        tipo_trato,
+        cantidad,
+        foto
+      }
+    })
+    return product
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 module.exports = {
   getMyProducts,
   getProductById,
   createProduct,
   getAllProducts,
   getProductsByCategory,
+  updateProduct
 }
