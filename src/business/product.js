@@ -130,6 +130,32 @@ const getMyProducts = async ({ userId }) => {
   }
 }
 
+const updateProduct = async ({ id, titulo, descripcion, tipo_trato, foto, cantidad, userId }) => {
+  try {
+    const product = await ProductDA.getProductById({ id })
+
+    if (!product) {
+      return {
+        code: RESULT_CODES.PRODUCT_NOT_FOUND
+      }
+    }
+    
+    if (product.userId !== userId) {
+      return {
+        code: RESULT_CODES.PRODUCT_NOT_FOUND
+      }
+    }
+    const productUpdated = await ProductDA.updateProduct({ id, titulo, descripcion, tipo_trato, foto, cantidad, userId })
+
+    return {
+      product: productUpdated,
+      code: RESULT_CODES.SUCCESS
+    }
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 
 module.exports = {
   getMyProducts,
@@ -138,4 +164,5 @@ module.exports = {
   getAllProducts,
   getProductById,
   getProductByFilter,
+  updateProduct,
 }
