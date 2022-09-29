@@ -31,19 +31,17 @@ router.post(
   }
 );
 
-//fix return errors and 
-
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  async ({user,query}, res) => {
+  async ({user, query}, res) => {
     try {
       const searchText = query.searchText;
 
       if (!searchText) {
-        const products = await getAllProducts({userId: user.id});
+        const products = await getAllProducts({ userId: user.id });
         res.status(200).send({ products });
-      }else {
+      } else {
         const products = await getProductByFilter({ searchText });
         res.status(200).send({ products });
       }
