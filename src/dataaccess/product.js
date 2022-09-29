@@ -9,6 +9,7 @@ const createProduct = async ({
   cantidad,
   foto,
   userId,
+  categorias
 }) => {
   try {
     const product = await prisma.producto.create({
@@ -20,16 +21,13 @@ const createProduct = async ({
         cantidad,
         userId,
         categoria: {
-          create: {
-            id_cate: 2
-          }
+          create: categorias
         }
       }
     })
-    return product
 
+    return product
   } catch (error) {
-    console.log(error)
     throw new Error(error)
   }
 }
@@ -86,7 +84,6 @@ const getAllProducts = async ({ userId }) => {
 
     return product
   } catch (error) {
-    console.log(error)
     throw new Error(error)
   }
 }

@@ -9,18 +9,18 @@ const createProduct = async ({
   tipo_trato,
   foto,
   cantidad,
-  userId
+  userId,
+  categorias
 }) => {
   try {
-
-
     const product = await ProductDA.createProduct({
       titulo,
       descripcion,
       tipo_trato,
       foto,
       cantidad,
-      userId
+      userId,
+      categorias: categorias.map((data) => ({id_cate: data}))
     })
 
     return product
