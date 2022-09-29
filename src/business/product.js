@@ -71,9 +71,9 @@ const getProductById = async ({ id }) => {
   }
 }
 
-const getProductByFilter = async ({ id }) => {
+const getProductByFilter = async ({ searchText }) => {
   try {
-    const product = await ProductDA.getProductById({ id });
+    const product = await ProductDA.getProductByFilter({ searchText });
 
     if (!product) {
       return {

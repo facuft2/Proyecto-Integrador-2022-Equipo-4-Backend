@@ -34,11 +34,17 @@ router.post(
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  async ({user}, res) => {
+  async ({user, query}, res) => {
     try {
-      const products = await getAllProducts({userId: user.id});
+      const searchText = query.searchText;
 
-      res.status(200).send({ products });
+      if (!searchText) {
+        const products = await getAllProducts({ userId: user.id });
+        res.status(200).send({ products });
+      } else {
+        const products = await getProductByFilter({ searchText });
+        res.status(200).send({ products });
+      }
     } catch (error) {
       res.json({ error: error.message });
     }
