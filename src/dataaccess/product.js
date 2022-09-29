@@ -28,7 +28,6 @@ const createProduct = async ({
 
     return product
   } catch (error) {
-    console.log(error)
     throw new Error(error)
   }
 }
@@ -85,7 +84,6 @@ const getAllProducts = async ({ userId }) => {
 
     return product
   } catch (error) {
-    console.log(error)
     throw new Error(error)
   }
 }
