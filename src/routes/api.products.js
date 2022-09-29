@@ -37,14 +37,19 @@ router.get(
   async ({user, query}, res) => {
     try {
       const searchText = query.searchText;
+      const id = query.id;
 
-      if (!searchText) {
+      if (!searchText && !id) {
         const products = await getAllProducts({ userId: user.id });
         res.status(200).send({ products });
-      } else {
+      } else if (searchText) {
         const products = await getProductByFilter({ searchText });
         res.status(200).send({ products });
+      } else if (id) {
+        const product = await getProductById({ id });
+        res.status(200).send({ product });
       }
+      
     } catch (error) {
       res.json({ error: error.message });
     }
@@ -115,21 +120,6 @@ router.put(
       }
 
       res.status(200).send({ product });
-    } catch (error) {
-      res.json({ error: error.message });
-    }
-  }
-);
-
-router.get(
-  "/:id",
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    try {
-      const { id } = req.params;
-      const products = await getProductById({ id });
-
-      res.status(200).send(products);
     } catch (error) {
       res.json({ error: error.message });
     }
