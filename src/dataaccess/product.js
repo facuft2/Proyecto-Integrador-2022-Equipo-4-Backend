@@ -73,20 +73,20 @@ const getAllProducts = async ({ userId }) => {
       include: {
         categoria: {
           select: {
-            id_prod: false,
-            id_cate: false,
-            categoria: {
-              userId: {
-                not: userId
-              }
-            }
+            categoria: true
           },
         }
-      }
+      },
+      where: {
+        userId: {
+          not: userId
+        }
+      },
     })
 
     return product
   } catch (error) {
+    console.log(error)
     throw new Error(error)
   }
 }

@@ -34,9 +34,9 @@ router.post(
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
+  async ({user}, res) => {
     try {
-      const products = await getAllProducts();
+      const products = await getAllProducts({userId: user.id});
 
       res.status(200).send({ products });
     } catch (error) {

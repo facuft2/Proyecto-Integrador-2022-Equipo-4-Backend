@@ -29,9 +29,9 @@ const createProduct = async ({
   }
 }
 
-const getAllProducts = async () => {
+const getAllProducts = async ({userId}) => {
   try {
-    const products = await ProductDA.getAllProducts()
+    const products = await ProductDA.getAllProducts({userId})
 
     const productClean = products.map((info) => ({
       id: info.id,
