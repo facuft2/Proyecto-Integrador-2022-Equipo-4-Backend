@@ -108,7 +108,12 @@ router.put(
         res.status(404).send({ product })
       }
 
-      res.status(200).send({ product });
+      if (product.code[RESULT_CODES.SUCCESS]) {
+        res.status(200).send({ product });
+      }
+
+      res.status(500).send({error: 'Internal server error'})      
+
     } catch (error) {
       res.json({ error: error.message });
     }
