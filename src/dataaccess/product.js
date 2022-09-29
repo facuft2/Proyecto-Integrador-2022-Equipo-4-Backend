@@ -91,6 +91,26 @@ const getAllProducts = async ({ userId }) => {
   }
 }
 
+const getProductByFilter = async ({ searchText }) => {
+  try {
+    const product = await prisma.producto.findMany({
+      where: {
+        OR: [
+          {
+            titulo: {
+              contains: searchText,
+            }
+          }
+        ]
+      }
+    })
+    return product
+  } catch (error) {
+    console.log(error)
+    throw new Error(error)
+  }
+}
+
 const getProductById = async ({ id }) => {
   try {
     id = parseInt(id, 10)
@@ -163,5 +183,6 @@ module.exports = {
   createProduct,
   getAllProducts,
   getProductsByCategory,
+  getProductByFilter,
   updateProduct
 }
