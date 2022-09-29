@@ -60,9 +60,6 @@ const getProductsByCategory = async ({ userId }) => {
       }
     })
 
-    console.log(products
-    )
-
     return products
   } catch (error) {
     throw new Error(error)

@@ -103,6 +103,11 @@ router.put(
         id: parseInt(params.id, 10),
         userId: parseInt(user.id, 10),
       });
+
+      if (product.code[RESULT_CODES.PRODUCT_NOT_FOUND]) {
+        res.status(404).send({ product })
+      }
+
       res.status(200).send({ product });
     } catch (error) {
       res.json({ error: error.message });
