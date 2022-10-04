@@ -2,9 +2,9 @@ const router = require("express").Router();
 const passport = require('passport');
 
 const { RESULT_CODES } = require("../utils/index");
-const { createCategory, createCatProduct, getCategory } = require("../business/category");
+const { createCategory, createCatProduct, getCategory } = require("../controllers/category");
 
-require('../config/loginCheck')
+require('../middlewares/userAuth')
 
 router.post(
   '/',

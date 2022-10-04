@@ -10,7 +10,7 @@ const ExchangeProduct = require("./src/routes/api.exchange")
 const category = require("./src/routes/api.category")
 const cors = require("cors");
 
-require('./src/config/loginCheck')
+require('./src/middlewares/userAuth')
 require("dotenv").config();
 
 const app = express();

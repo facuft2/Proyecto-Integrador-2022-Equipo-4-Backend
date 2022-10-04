@@ -2,9 +2,9 @@ const router = require("express").Router();
 const passport = require('passport');
 
 const { RESULT_CODES } = require("../utils/index");
-const { createExchange, editExchangeState, getExchangeById } = require("../business/exchange");
+const { createExchange, editExchangeState, getExchangeById } = require("../controllers/exchange");
 
-require('../config/loginCheck')
+require('../middlewares/userAuth')
 
 router.post(
     '/:id_producto_recibido',

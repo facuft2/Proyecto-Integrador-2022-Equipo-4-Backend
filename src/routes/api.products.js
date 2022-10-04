@@ -10,9 +10,9 @@ const {
   getMyProducts,
   getProductByFilter,
   updateProduct,
-} = require("../business/product");
+} = require("../controllers/product");
 
-require("../config/loginCheck");
+require("../middlewares/userAuth");
 
 router.post(
   "/",

@@ -6,10 +6,10 @@ const inputValidator = require("../middlewares/inputValidator");
 const validator = require('./validators/postUser');
 const { RESULT_CODES } = require("../utils/index");
 
-const { getUsers, createUser, editUser } = require("../business/user");
+const { getUsers, createUser, editUser } = require("../controllers/user");
 const { getUserByProps } = require("../dataaccess/user");
 
-require('../config/loginCheck')
+require('../middlewares/userAuth')
 
 router.get(
   "/",
