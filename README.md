@@ -30,7 +30,7 @@ Express + Prisma
 - Levantar el servidor
 
 ```bash
-  npm run dev
+  npm run
 ```
 
 ## Autores
