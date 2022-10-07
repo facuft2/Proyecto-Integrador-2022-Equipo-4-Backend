@@ -3,24 +3,41 @@ const productDA = require('../dataAccess/product');
 
 const { RESULT_CODES } = require("../utils/index");
 
-const createExchange = async ({ id_producto_enviado, id_producto_recibido, estado }) => {
+const createExchange = async ({ idO, idR, mensaje, userId }) => {
   try {
+    const productSended = await productDA.getProductById({id: idO});
+    const productRecieved = await productDA.getProductById({id: idR});
 
-    const productSended = await productDA.getProductById({id: id_producto_enviado});
-    const productRecieved = await productDA.getProductById({id: id_producto_recibido});
-
-    id_producto_recibido = parseInt(id_producto_recibido, 10)
-
+    console.log(productSended.userId, userId);
+    
     if (!productSended || !productRecieved) {
       return {
         code: RESULT_CODES.PRODUCT_NOT_FOUND
       }
     }
+    
+    if (productSended.userId === productRecieved.userId) {
+      return {
+        code: RESULT_CODES.SAME_USER
+      }
+    }
+    
+    if (productSended.userId !== userId) {
+      return {
+        code: RESULT_CODES.NOT_PRODUCT_OWNER
+      }
+    }
+
+    if (!mensaje) {
+      return {
+        code: RESULT_CODES.MISSING_MESSAGE
+      }
+    }
 
     const exchange = await exchangeDA.createExchange({
-      id_producto_enviado,
-      id_producto_recibido,
-      estado  
+      id_producto_enviado: idO,
+      id_producto_recibido: idR,
+      mensaje,
     });
 
     return {

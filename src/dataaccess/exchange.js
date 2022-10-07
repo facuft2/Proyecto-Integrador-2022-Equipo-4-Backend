@@ -1,13 +1,13 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const createExchange = async ({ id_producto_enviado, id_producto_recibido, estado }) => {
+const createExchange = async ({ id_producto_enviado, id_producto_recibido, mensaje }) => {
   try {
     const exchange = await prisma.intercambio.create({
       data: {
         id_producto_enviado,
         id_producto_recibido,
-        estado,
+        mensaje
       },
       include: {
         producto_enviado: true,
