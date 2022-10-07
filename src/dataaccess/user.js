@@ -39,6 +39,7 @@ const createUser = async ({ nombre, apellido, email, contrasenia }) => {
         apellido,
         email,
         contrasenia: hashedPassword,
+        foto_perfil: 'https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
       },
     });
   } catch (error) {

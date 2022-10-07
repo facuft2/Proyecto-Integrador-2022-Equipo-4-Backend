@@ -66,7 +66,8 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      const { body, user } = req;
+      const { body, user } = req; 
+
       const usuario = await editUser({...body, id: user.id});
       res.status(200).send({ usuario });
     } catch (error) {

@@ -8,8 +8,6 @@ const createExchange = async ({ idO, idR, mensaje, userId }) => {
     const productSended = await productDA.getProductById({id: idO});
     const productRecieved = await productDA.getProductById({id: idR});
 
-    console.log(productSended.userId, userId);
-    
     if (!productSended || !productRecieved) {
       return {
         code: RESULT_CODES.PRODUCT_NOT_FOUND
