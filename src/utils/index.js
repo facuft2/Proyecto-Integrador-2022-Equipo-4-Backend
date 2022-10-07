@@ -18,6 +18,8 @@ const RESULT_CODES = Object.freeze({
     NOT_EXCHANGE_OWNER: 'No eres el dueño del intercambio',
     THIS_PRODUCT_IS_A_DONATION: 'Este producto es una donacion',
     NOT_PRODUCT_OWNER: 'No eres el dueño del producto',
+    NO_EXCHANGES: 'No tienes intercambios',
+
   });
   
   module.exports = {
