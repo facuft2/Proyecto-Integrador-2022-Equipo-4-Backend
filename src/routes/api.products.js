@@ -34,22 +34,18 @@ router.post(
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  async ({user, query}, res) => {
+  async ({user, query: {searchText, id}}, res) => {
     try {
-      const searchText = query.searchText;
-      const id = query.id;
-
       if (!searchText && !id) {
         const products = await getAllProducts({ userId: user.id });
-        res.status(200).send({ products });
+        res.status(200).send( products );
       } else if (searchText) {
         const products = await getProductByFilter({ searchText });
-        res.status(200).send({ products });
+        res.status(200).send( products );
       } else if (id) {
         const product = await getProductById({ id });
-        res.status(200).send({ product });
+        res.status(200).send( product );
       }
-      
     } catch (error) {
       res.json({ error: error.message });
     }
@@ -93,7 +89,7 @@ router.get(
 router.get(
   "/filter/:param",
   passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
+  async (_, res) => {
     try {
       const product = await getProductByFilter();
 

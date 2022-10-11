@@ -12,7 +12,7 @@ router.post('/:idR/:idO', passport.authenticate('jwt', { session: false }), asyn
             ...body,
             idR: parseInt(params.idR, 10),
             idO: parseInt(params.idO, 10),
-            mwnsaje: body.mensaje,
+            mensaje: body.mensaje,
             userId: user.id
         });
         switch (exchange.code) {
