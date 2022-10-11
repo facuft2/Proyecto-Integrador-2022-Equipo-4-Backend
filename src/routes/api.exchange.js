@@ -74,9 +74,17 @@ router.get(
 router.get(
   '/:id',
   passport.authenticate('jwt', { session: false }),
-  async ({params: {id}}, res) => {
+  async ({params: {id}, user}, res) => {
     try {
-      const exchange = await getExchangeById({id})
+      const exchange = await getExchangeById({id, userId: user.id});
+
+      if (exchange.code === RESULT_CODES.EXCHANGE_NOT_FOUND) {
+        return res.status(404).send({ error: RESULT_CODES.EXCHANGE_NOT_FOUND });
+      }
+
+      if (exchange.code === RESULT_CODES.NOT_EXCHANGE_OWNER) {
+        return res.status(400).send({ error: RESULT_CODES.NOT_EXCHANGE_OWNER });
+      }
 
       res.status(200).send(exchange);
     } catch (error) {
