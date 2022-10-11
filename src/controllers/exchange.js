@@ -5,23 +5,21 @@ const { RESULT_CODES } = require("../utils/index");
 
 const createExchange = async ({ idO, idR, mensaje, userId }) => {
   try {
-    const productSended = await productDA.getProductById({id: idO});
-    const productRecieved = await productDA.getProductById({id: idR});
+    const productSended = await productDA.getProductById({ id: idO });
+    const productRecieved = await productDA.getProductById({ id: idR });
 
-    console.log(productSended.userId, userId);
-    
     if (!productSended || !productRecieved) {
       return {
         code: RESULT_CODES.PRODUCT_NOT_FOUND
       }
     }
-    
+
     if (productSended.userId === productRecieved.userId) {
       return {
         code: RESULT_CODES.SAME_USER
       }
     }
-    
+
     if (productSended.userId !== userId) {
       return {
         code: RESULT_CODES.NOT_PRODUCT_OWNER
@@ -51,15 +49,15 @@ const createExchange = async ({ idO, idR, mensaje, userId }) => {
 
 const editExchangeState = async ({ estado, id, userId }) => {
   try {
-    const {producto_enviado} = await exchangeDA.getExchangeById({id})
+    const { producto_enviado } = await exchangeDA.getExchangeById({ id })
 
-    if (!producto_enviado.userId === userId ) {
+    if (!producto_enviado.userId === userId) {
       return {
         code: RESULT_CODES.YOU_CANNOT_MAKE_THIS_ACTION
       }
     }
 
-    const exchange = await exchangeDA.editState({estado, id})
+    const exchange = await exchangeDA.editState({ estado, id })
 
     return {
       exchange,
@@ -72,7 +70,7 @@ const editExchangeState = async ({ estado, id, userId }) => {
 
 const getExchangeById = async ({ id }) => {
   try {
-    const exchange = await exchangeDA.getExchangeById({id})
+    const exchange = await exchangeDA.getExchangeById({ id })
 
     return exchange;
   } catch (error) {
@@ -80,8 +78,24 @@ const getExchangeById = async ({ id }) => {
   }
 };
 
+const getMyExchangesByParams = async ({ userId, exchangeType }) => {
+  try {
+    if (exchangeType === 'enviado' || exchangeType === 'recibido') {
+      const exchanges = await exchangeDA.getMyExchangesByParams({ userId, exchangeType })
+      return exchanges;
+    }
+    
+    return {
+      code: RESULT_CODES.INVALID_EXCHANGE_TYPE
+    }
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 module.exports = {
   createExchange,
   editExchangeState,
   getExchangeById,
+  getMyExchangesByParams,
 }

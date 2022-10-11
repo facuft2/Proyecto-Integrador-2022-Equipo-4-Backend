@@ -2,7 +2,7 @@ const router = require("express").Router();
 const passport = require('passport');
 
 const { RESULT_CODES } = require("../utils/index");
-const { createExchange, editExchangeState, getExchangeById } = require("../controllers/exchange");
+const { createExchange, editExchangeState, getExchangeById, getMyExchangesByParams } = require("../controllers/exchange");
 
 require('../middlewares/userAuth')
 
@@ -12,7 +12,7 @@ router.post('/:idR/:idO', passport.authenticate('jwt', { session: false }), asyn
             ...body,
             idR: parseInt(params.idR, 10),
             idO: parseInt(params.idO, 10),
-            mwnsaje: body.mensaje,
+            mensaje: body.mensaje,
             userId: user.id
         });
         switch (exchange.code) {
@@ -52,6 +52,24 @@ router.put(
     }
     }
 );
+
+router.get(
+    '/',
+    passport.authenticate('jwt', { session: false }),
+    async ({user: {id}, query: {exchangeType}}, res) => {
+      try {
+        const exchange = await getMyExchangesByParams({userId: id, exchangeType})
+
+        if (exchange.code === RESULT_CODES.INVALID_EXCHANGE_TYPE) {
+          return res.status(400).send({ error: RESULT_CODES.INVALID_EXCHANGE_TYPE });
+        }
+  
+        res.status(200).send(exchange);
+      } catch (error) {
+        throw new Error(error)
+      }
+    }
+  )
 
 router.get(
   '/:id',

@@ -34,8 +34,6 @@ router.get(
     } catch (error) {
       res.status(500).send({error: error.message})
     }
-
-
   }
 )
 
@@ -51,13 +49,12 @@ router.post(
           return res.status(401).send({ error: code });
         case RESULT_CODES.SUCCESS:
           const token = jwt.sign({ user }, process.env.SECRET_KEY, {});
-    
           return res.status(201).header('Authorization', `Bearer ${token}`).send({user})
         default:
           return res.status(500).send({ error: "Internal server error" });
       }
     } catch (error) {
-      res.json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   });
 

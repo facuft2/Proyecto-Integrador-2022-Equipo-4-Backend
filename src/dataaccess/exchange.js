@@ -50,15 +50,15 @@ const getExchangeById = async ({ id }) => {
     const exchange = await prisma.intercambio.findUnique({
       where: {
         id
-      }, 
+      },
       include: {
         producto_enviado: {
-          include: { 
+          include: {
             usuario: true
           }
         },
         producto_recibido: {
-          include: { 
+          include: {
             usuario: true
           }
         },
@@ -71,8 +71,43 @@ const getExchangeById = async ({ id }) => {
   }
 }
 
+const getMyExchangesByParams = async ({ userId, exchangeType }) => {
+  try {
+    const exchange = await prisma.intercambio.findMany({
+      where: {
+        ...(exchangeType === 'enviado' ? {
+          producto_enviado: {
+            is: {
+              userId: {
+                equals: userId
+              }
+            }
+          }
+        } : {
+          producto_recibido: {
+            is: {
+              userId: {
+                equals: userId
+              }
+            }
+          }
+        })
+      },
+      include: {
+        producto_enviado: true,
+        producto_recibido: true
+      },
+    })
+
+    return exchange
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 
 module.exports = {
+  getMyExchangesByParams,
   createExchange,
   editState,
   getExchangeById
