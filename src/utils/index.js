@@ -19,6 +19,7 @@ const RESULT_CODES = Object.freeze({
     THIS_PRODUCT_IS_A_DONATION: 'Este producto es una donacion',
     NOT_PRODUCT_OWNER: 'No eres el dueño del producto',
     NO_EXCHANGES: 'No tienes intercambios',
+    INVALID_EXCHANGE_TYPE: 'El tipo de intercambio no es valido',
 
   });
   
