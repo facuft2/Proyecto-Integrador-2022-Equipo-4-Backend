@@ -9,10 +9,7 @@ const RESULT_CODES = Object.freeze({
     YOU_CANNOT_MAKE_THIS_ACTION: 'No puedes realizar esta accion',
     SAME_USER: 'No puedes intercambiar tus propios productos',
     EXCHANGE_NOT_FOUND: 'El intercambio no existe',
-    EXCHANGE_ALREADY_ACCEPTED: 'El intercambio ya fue aceptado',
-    EXCHANGE_ALREADY_REJECTED: 'El intercambio ya fue rechazado',
-    EXCHANGE_ALREADY_CANCELED: 'El intercambio ya fue cancelado',
-    EXCHANGE_ALREADY_FINISHED: 'El intercambio ya fue finalizado',
+    EXCHANGE_ALREADY_ACCEPTED_REJECTED: 'El intercambio ya fue aceptado o rechazado',
     MISSING_MESSAGE: 'El mensaje no puede estar vacio',
     EXCHANGE_ALREADY_SENT: 'Ya existe un intercambio con ese producto',
     NOT_EXCHANGE_OWNER: 'No eres el dueño del intercambio',
@@ -20,7 +17,6 @@ const RESULT_CODES = Object.freeze({
     NOT_PRODUCT_OWNER: 'No eres el dueño del producto',
     NO_EXCHANGES: 'No tienes intercambios',
     INVALID_EXCHANGE_TYPE: 'El tipo de intercambio no es valido',
-
   });
   
   module.exports = {
