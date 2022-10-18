@@ -11,17 +11,17 @@ const { getUserByProps } = require("../dataaccess/user");
 
 require('../middlewares/userAuth')
 
-router.get(
-  "/",
-  passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
-  try {
-    const usuarios = await getUsers();
-    res.status(200).send(usuarios);
-  } catch (error) {
-    res.json({ error: error.message });
-  }
-});
+// router.get(
+//   "/",
+//   passport.authenticate('jwt', { session: false }),
+//   async (req, res) => {
+//   try {
+//     const usuarios = await getUsers();
+//     res.status(200).send(usuarios);
+//   } catch (error) {
+//     res.json({ error: error.message });
+//   }
+// });
 
 router.get(
   '/:id',
