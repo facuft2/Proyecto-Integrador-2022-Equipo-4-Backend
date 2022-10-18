@@ -59,8 +59,8 @@ router.put(
                 case RESULT_CODES.INVALID_EXCHANGE_TYPE:
                     res.status(400).send({ error: RESULT_CODES.INVALID_EXCHANGE_TYPE });
                     break;
-                case RESULT_CODES.EXCHANGE_ALREADY_ACCEPTED:
-                    res.status(400).send({ error: RESULT_CODES.EXCHANGE_ALREADY_ACCEPTED });
+                case RESULT_CODES.EXCHANGE_ALREADY_ACCEPTED_REJECTED:
+                    res.status(400).send({ error: RESULT_CODES.EXCHANGE_ALREADY_ACCEPTED_REJECTED });
                     break;
                 default:
                     res.status(200).send({ exchange });

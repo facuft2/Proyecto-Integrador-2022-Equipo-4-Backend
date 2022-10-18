@@ -58,7 +58,7 @@ const editExchangeState = async ({ id, estado, userId }) => {
     }
 
     if (estado === "ACEPTADO") {
-      const exchange = await exchangeDA.getExchangeById({ id, userId });
+      const exchange = await exchangeDA.getExchangeById({ id });
       
       if (!exchange) {
         return {
@@ -77,7 +77,7 @@ const editExchangeState = async ({ id, estado, userId }) => {
 
       if (exchange.estado !== "ESPERANDO") {
         return {
-          code: RESULT_CODES.EXCHANGE_ALREADY_ACCEPTED
+          code: RESULT_CODES.EXCHANGE_ALREADY_ACCEPTED_REJECTED
         };
       }
 
@@ -93,11 +93,14 @@ const editExchangeState = async ({ id, estado, userId }) => {
       delete formattedExchange.producto_enviado
       delete formattedExchange.producto_recibido
 
-      return formattedExchange;
+      return {
+        ...formattedExchange,
+        code: RESULT_CODES.SUCCESS,
+      };
     }
 
     if (estado === "RECHAZADO") {
-      const exchange = await exchangeDA.getExchangeById({ id, userId });
+      const exchange = await exchangeDA.getExchangeById({ id });
 
       if (!exchange) {
         return {
@@ -113,6 +116,28 @@ const editExchangeState = async ({ id, estado, userId }) => {
           code: RESULT_CODES.YOU_CANNOT_MAKE_THIS_ACTION,
         };
       }
+
+      if (exchange.estado !== "ESPERANDO") {
+        return {
+          code: RESULT_CODES.EXCHANGE_ALREADY_ACCEPTED_REJECTED
+        };
+      }
+
+      if (exchange.producto_enviado.userId === userId) {
+        const editExchangeState = await exchangeDA.editState({ id, estado:'CANCELADO' });
+        return {
+          ...editExchangeState,
+          code: RESULT_CODES.SUCCESS,
+        }
+      }
+
+      if (exchange.producto_recibido.userId === userId) {
+        const editExchangeState = await exchangeDA.editState({ id, estado:'RECHAZADO' });
+        return {
+          ...editExchangeState,
+          code: RESULT_CODES.SUCCESS,
+        }
+      }
     }
 
   } catch (error) {
@@ -122,7 +147,7 @@ const editExchangeState = async ({ id, estado, userId }) => {
 
 const getExchangeById = async ({ id, userId }) => {
   try {
-    const exchange = await exchangeDA.getExchangeById({ id, userId });
+    const exchange = await exchangeDA.getExchangeById({ id });
 
     if (!exchange) {
       return {
