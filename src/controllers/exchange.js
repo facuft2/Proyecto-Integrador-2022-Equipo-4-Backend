@@ -77,7 +77,7 @@ const editExchangeState = async ({ id, estado, userId }) => {
 
       if (exchange.estado !== "ESPERANDO") {
         return {
-          code: RESULT_CODES.EXCHANGE_ALREADY_ACCEPTED
+          code: RESULT_CODES.EXCHANGE_ALREADY_ACCEPTED_REJECTED
         };
       }
 
@@ -89,8 +89,10 @@ const editExchangeState = async ({ id, estado, userId }) => {
 
       const editExchangeState = await exchangeDA.editState({ id, estado });
 
-      return editExchangeState;
-
+      return {
+        ...editExchangeState,
+        code: RESULT_CODES.SUCCESS,
+      };
     }
 
     if (estado === "RECHAZADO") {
@@ -109,6 +111,28 @@ const editExchangeState = async ({ id, estado, userId }) => {
         return {
           code: RESULT_CODES.YOU_CANNOT_MAKE_THIS_ACTION,
         };
+      }
+
+      if (exchange.estado !== "ESPERANDO") {
+        return {
+          code: RESULT_CODES.EXCHANGE_ALREADY_ACCEPTED_REJECTED
+        };
+      }
+
+      if (exchange.producto_enviado.userId === userId) {
+        const editExchangeState = await exchangeDA.editState({ id, estado:'CANCELADO' });
+        return {
+          ...editExchangeState,
+          code: RESULT_CODES.SUCCESS,
+        }
+      }
+
+      if (exchange.producto_recibido.userId === userId) {
+        const editExchangeState = await exchangeDA.editState({ id, estado:'RECHAZADO' });
+        return {
+          ...editExchangeState,
+          code: RESULT_CODES.SUCCESS,
+        }
       }
     }
 
