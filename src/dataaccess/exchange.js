@@ -44,7 +44,7 @@ const editState = async ({ id, estado }) => {
 }
     
 
-const getExchangeById = async ({ id }) => {
+const getExchangeById = async ({ id, userId }) => {
   try {
     id = parseInt(id)
 

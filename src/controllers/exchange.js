@@ -58,7 +58,7 @@ const editExchangeState = async ({ id, estado, userId }) => {
     }
 
     if (estado === "ACEPTADO") {
-      const exchange = await exchangeDA.getExchangeById({ id });
+      const exchange = await exchangeDA.getExchangeById({ id, userId });
       
       if (!exchange) {
         return {
@@ -88,13 +88,16 @@ const editExchangeState = async ({ id, estado, userId }) => {
       }
 
       const editExchangeState = await exchangeDA.editState({ id, estado });
+      const formattedExchange = {...editExchangeState, tu_producto: editExchangeState.producto_enviado.userId === userId ? editExchangeState.producto_enviado : editExchangeState.producto_recibido, otro_producto: editExchangeState.producto_enviado.userId !== userId ? editExchangeState.producto_enviado : editExchangeState.producto_recibido}
 
-      return editExchangeState;
+      delete formattedExchange.producto_enviado
+      delete formattedExchange.producto_recibido
 
+      return formattedExchange;
     }
 
     if (estado === "RECHAZADO") {
-      const exchange = await exchangeDA.getExchangeById({ id });
+      const exchange = await exchangeDA.getExchangeById({ id, userId });
 
       if (!exchange) {
         return {
@@ -119,7 +122,7 @@ const editExchangeState = async ({ id, estado, userId }) => {
 
 const getExchangeById = async ({ id, userId }) => {
   try {
-    const exchange = await exchangeDA.getExchangeById({ id });
+    const exchange = await exchangeDA.getExchangeById({ id, userId });
 
     if (!exchange) {
       return {
@@ -143,14 +146,24 @@ const getExchangeById = async ({ id, userId }) => {
     }
 
     if (exchange.producto_enviado.userId !== userId && exchange.producto_recibido.userId !== userId) {
-      console.log(exchange.producto_enviado.userId, userId)
       return {
         code: RESULT_CODES.NOT_EXCHANGE_OWNER
       }
     }
 
-    return exchange;
+    const formattedExchange = {
+      ...exchange,
+      tu_producto: exchange.producto_enviado.userId === userId ? exchange.producto_enviado : exchange.producto_recibido, 
+      otro_producto: exchange.producto_enviado.userId !== userId ? exchange.producto_enviado : exchange.producto_recibido,
+      isRecieved: exchange.producto_recibido.userId === userId,
+    }
+
+    delete formattedExchange.producto_enviado
+    delete formattedExchange.producto_recibido
+
+    return formattedExchange;
   } catch (error) {
+    console.log(error)
     throw new Error(error);
   }
 };
