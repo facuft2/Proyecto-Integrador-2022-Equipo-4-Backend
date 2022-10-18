@@ -88,9 +88,13 @@ const editExchangeState = async ({ id, estado, userId }) => {
       }
 
       const editExchangeState = await exchangeDA.editState({ id, estado });
+      const formattedExchange = {...editExchangeState, tu_producto: editExchangeState.producto_enviado.userId === userId ? editExchangeState.producto_enviado : editExchangeState.producto_recibido, otro_producto: editExchangeState.producto_enviado.userId !== userId ? editExchangeState.producto_enviado : editExchangeState.producto_recibido}
+
+      delete formattedExchange.producto_enviado
+      delete formattedExchange.producto_recibido
 
       return {
-        ...editExchangeState,
+        ...formattedExchange,
         code: RESULT_CODES.SUCCESS,
       };
     }
@@ -167,14 +171,24 @@ const getExchangeById = async ({ id, userId }) => {
     }
 
     if (exchange.producto_enviado.userId !== userId && exchange.producto_recibido.userId !== userId) {
-      console.log(exchange.producto_enviado.userId, userId)
       return {
         code: RESULT_CODES.NOT_EXCHANGE_OWNER
       }
     }
 
-    return exchange;
+    const formattedExchange = {
+      ...exchange,
+      tu_producto: exchange.producto_enviado.userId === userId ? exchange.producto_enviado : exchange.producto_recibido, 
+      otro_producto: exchange.producto_enviado.userId !== userId ? exchange.producto_enviado : exchange.producto_recibido,
+      isRecieved: exchange.producto_recibido.userId === userId,
+    }
+
+    delete formattedExchange.producto_enviado
+    delete formattedExchange.producto_recibido
+
+    return formattedExchange;
   } catch (error) {
+    console.log(error)
     throw new Error(error);
   }
 };
