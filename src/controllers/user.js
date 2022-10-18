@@ -12,7 +12,6 @@ const getUsers = async (req, res) => {
 const createUser = async ({ nombre, apellido, email, contrasenia }) => {
     try {
         if (await userDA.getUserByProps({ email })) {
-            console.log('email already registered');
             return { code: RESULT_CODES.EMAIL_ALREADY_REGISTERED };
         }
 
