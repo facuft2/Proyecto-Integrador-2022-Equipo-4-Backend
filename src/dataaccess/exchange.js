@@ -22,26 +22,27 @@ const createExchange = async ({ id_producto_enviado, id_producto_recibido, mensa
   }
 }
 
-const editState = async ({ estado, id }) => {
+const editState = async ({ id, estado }) => {
   try {
-    id = parseInt(id, 10)
-
     const exchange = await prisma.intercambio.update({
       where: {
-        id
+        id: id
       },
       data: {
-        estado,
+        estado
       },
+      include: {
+        producto_enviado: true,
+        producto_recibido: true,
+      }
     })
 
     return exchange
-
   } catch (error) {
-    console.log(error)
     throw new Error(error)
   }
 }
+    
 
 const getExchangeById = async ({ id }) => {
   try {

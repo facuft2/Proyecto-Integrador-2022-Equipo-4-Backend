@@ -40,16 +40,35 @@ router.post('/:idR/:idO', passport.authenticate('jwt', { session: false }), asyn
 
 
 router.put(
-    '/:id',
+    '/:id/:estado',
     passport.authenticate('jwt', { session: false }),
-    async (req, res) => {
-    try {
-        const { params: {id}, body } = req;
-        const exchange = await editExchangeState({...body, id});
-        res.status(200).send(exchange);
-    } catch (error) {
-        res.json({ error: error.message });
-    }
+    async ({ params, user }, res) => {
+        try {
+            const exchange = await editExchangeState({
+                id: parseInt(params.id, 10),
+                estado: params.estado,
+                userId: user.id
+            });
+            switch (exchange.code) {
+                case RESULT_CODES.YOU_CANNOT_MAKE_THIS_ACTION:
+                    res.status(400).send({ error: RESULT_CODES.YOU_CANNOT_MAKE_THIS_ACTION });
+                    break;
+                case RESULT_CODES.EXCHANGE_NOT_FOUND:
+                    res.status(404).send({ error: RESULT_CODES.EXCHANGE_NOT_FOUND });
+                    break;
+                case RESULT_CODES.INVALID_EXCHANGE_TYPE:
+                    res.status(400).send({ error: RESULT_CODES.INVALID_EXCHANGE_TYPE });
+                    break;
+                case RESULT_CODES.EXCHANGE_ALREADY_ACCEPTED:
+                    res.status(400).send({ error: RESULT_CODES.EXCHANGE_ALREADY_ACCEPTED });
+                    break;
+                default:
+                    res.status(200).send({ exchange });
+                    break;
+            }
+        } catch (error) {
+            res.json({ error: error.message });
+        }
     }
 );
 
