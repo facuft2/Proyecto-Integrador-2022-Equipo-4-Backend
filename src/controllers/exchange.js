@@ -136,6 +136,19 @@ const getExchangeById = async ({ id, userId }) => {
       };
     }
 
+    if (!exchange) {
+      return {
+        code: RESULT_CODES.EXCHANGE_NOT_FOUND
+      }
+    }
+
+    if (exchange.producto_enviado.userId !== userId && exchange.producto_recibido.userId !== userId) {
+      console.log(exchange.producto_enviado.userId, userId)
+      return {
+        code: RESULT_CODES.NOT_EXCHANGE_OWNER
+      }
+    }
+
     return exchange;
   } catch (error) {
     throw new Error(error);
