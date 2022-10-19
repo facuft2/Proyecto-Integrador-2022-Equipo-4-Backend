@@ -1,5 +1,5 @@
-const exchangeDA = require("../dataAccess/exchange");
-const productDA = require("../dataAccess/product");
+const exchangeDA = require("../dataaccess/exchange");
+const productDA = require("../dataaccess/product");
 
 const { RESULT_CODES } = require("../utils/index");
 
