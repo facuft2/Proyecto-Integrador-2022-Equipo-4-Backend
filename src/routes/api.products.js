@@ -14,8 +14,12 @@ const {
 
 require("../middlewares/userAuth");
 
+const inputValidator = require("../middlewares/inputValidator");
+const validator = require("./validators/postProduct");
+
 router.post(
   "/",
+  inputValidator(validator),
   passport.authenticate("jwt", { session: false }),
   async ({ body, user }, res) => {
     try {
