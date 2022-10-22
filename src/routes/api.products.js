@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const passport = require("passport");
+const aws = require('aws-sdk')
+const multer = require('multer');
 
 const { RESULT_CODES } = require("../utils/index");
 const {
@@ -11,6 +13,7 @@ const {
   getProductByFilter,
   updateProduct,
 } = require("../controllers/product");
+const { s3Uploadv3 } = require("../middlewares/clientS3");
 
 require("../middlewares/userAuth");
 
@@ -31,20 +34,38 @@ router.post(
   }
 );
 
+router.post(
+  "/imagen",
+  passport.authenticate("jwt", { session: false }),
+  multer({}).single("File"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        res.status(400).send({ error: "No se ha seleccionado ningun archivo" });
+      } else {
+        const results = await s3Uploadv3(req.file)
+        res.status(200).send(results);
+      }
+    } catch (error) {
+      res.json({ error: error.message });
+    }
+  }
+);
+
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  async ({user, query: {searchText, id}}, res) => {
+  async ({ user, query: { searchText, id } }, res) => {
     try {
       if (!searchText && !id) {
         const products = await getAllProducts({ userId: user.id });
-        res.status(200).send( products );
+        res.status(200).send(products);
       } else if (searchText) {
         const products = await getProductByFilter({ searchText });
-        res.status(200).send( products );
+        res.status(200).send(products);
       } else if (id) {
         const product = await getProductById({ id });
-        res.status(200).send( product );
+        res.status(200).send(product);
       }
     } catch (error) {
       res.json({ error: error.message });

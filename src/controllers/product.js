@@ -1,7 +1,9 @@
 const ProductDA = require('../dataaccess/product');
 const UserDA = require('../dataaccess/user')
 const { RESULT_CODES } = require('../utils/index')
-const AWS = require('aws-sdk')
+// const express = require('express');
+// const multer = require('multer');
+// const multerS3 = require('multer-s3');
 
 const createProduct = async ({
   titulo,
@@ -20,8 +22,14 @@ const createProduct = async ({
       foto,
       cantidad,
       userId,
-      categorias: categorias.map((data) => ({id_cate: data}))
+      categorias: categorias.map((data) => ({ id_cate: data }))
     })
+
+    if (!product) {
+      return {
+        code: RESULT_CODES.PRODUCT_NOT_FOUND
+      }
+    }
 
     return product
   } catch (error) {
@@ -29,9 +37,9 @@ const createProduct = async ({
   }
 }
 
-const getAllProducts = async ({userId}) => {
+const getAllProducts = async ({ userId }) => {
   try {
-    const products = await ProductDA.getAllProducts({userId})
+    const products = await ProductDA.getAllProducts({ userId })
 
     const productClean = products.map((info) => ({
       id: info.id,
@@ -139,7 +147,7 @@ const updateProduct = async ({ id, titulo, descripcion, tipo_trato, foto, cantid
         code: RESULT_CODES.PRODUCT_NOT_FOUND
       }
     }
-    
+
     if (product.userId !== userId) {
       return {
         code: RESULT_CODES.PRODUCT_NOT_FOUND
