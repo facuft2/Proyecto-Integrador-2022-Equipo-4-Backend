@@ -1,27 +1,16 @@
 const router = require("express").Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
 
 const inputValidator = require("../middlewares/inputValidator");
 const validator = require('./validators/postUser');
 const { RESULT_CODES } = require("../utils/index");
-
 const { getUsers, createUser, editUser } = require("../controllers/user");
 const { getUserByProps } = require("../dataaccess/user");
+const { s3Uploadv3 } = require("../services/clientS3");
 
 require('../middlewares/userAuth')
-
-// router.get(
-//   "/",
-//   passport.authenticate('jwt', { session: false }),
-//   async (req, res) => {
-//   try {
-//     const usuarios = await getUsers();
-//     res.status(200).send(usuarios);
-//   } catch (error) {
-//     res.json({ error: error.message });
-//   }
-// });
 
 router.get(
   "/myProfile",
@@ -57,6 +46,24 @@ router.post(
   }
 );
 
+router.post(
+  "/imagen",
+  passport.authenticate("jwt", { session: false }),
+  multer({}).single("File"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        res.status(400).send({ error: "No se ha seleccionado ningun archivo" });
+      } else {
+        const results = await s3Uploadv3(req.file, 'UserProfile')
+        res.status(200).send(results);
+      }
+    } catch (error) {
+      res.json({ error: error.message });
+    }
+  }
+);
+
 router.put(
   "/",
   passport.authenticate('jwt', { session: false }),
@@ -64,12 +71,14 @@ router.put(
     try {
       const { body, user } = req;
       const usuario = await editUser({ ...body, id: user.id });
+
       res.status(200).send({ usuario });
     } catch (error) {
       res.json({ error: error.message });
     }
   },
 );
+
 
 router.get(
   '/:id',
