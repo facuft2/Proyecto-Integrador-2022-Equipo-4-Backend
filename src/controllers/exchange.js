@@ -48,9 +48,7 @@ const createExchange = async ({ idO, idR, mensaje, userId }) => {
 };
 
 const editExchangeState = async ({ id, estado, userId }) => {
-
   try {
-
     if (estado != "ACEPTADO" && estado != "RECHAZADO") {
       return {
         code: RESULT_CODES.INVALID_EXCHANGE_TYPE,

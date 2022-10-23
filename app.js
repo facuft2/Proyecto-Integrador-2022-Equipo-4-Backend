@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const passport = require("passport")
 const createError = require("http-errors");
+const bodyParser = require('body-parser');
 
 const users = require("./src/routes/api.users");
 const auth = require("./src/routes/api.routeauth");
@@ -17,13 +18,17 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 app.use(passport.initialize());
+app.use(
+    bodyParser.urlencoded({
+        extended: true,
+    })
+);
 
-app.use(express.json({limit: '50mb'}));
+app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cors(
     {
-    exposedHeaders: 'Authorization',
-    // origin: 'http://localhost:3000'
+        exposedHeaders: 'Authorization',
     }
 ));
 
@@ -37,7 +42,7 @@ app.use("/users", users);
 
 app.use((req, res, next) => {
     next(createError(404));
-    }
+}
 );
 
 app.use((err, req, res, next) => {
