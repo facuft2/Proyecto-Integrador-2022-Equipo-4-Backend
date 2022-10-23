@@ -13,12 +13,10 @@ const {
   getProductByFilter,
   updateProduct,
 } = require("../controllers/product");
-const { s3Uploadv3 } = require("../middlewares/clientS3");
-
-require("../middlewares/userAuth");
-
+const { s3Uploadv3 } = require("../services/clientS3");
 const inputValidator = require("../middlewares/inputValidator");
 const validator = require("./validators/postProduct");
+require("../middlewares/userAuth");
 
 router.post(
   "/",
@@ -47,7 +45,7 @@ router.post(
       if (!req.file) {
         res.status(400).send({ error: "No se ha seleccionado ningun archivo" });
       } else {
-        const results = await s3Uploadv3(req.file)
+        const results = await s3Uploadv3(req.file, 'Products')
         res.status(200).send(results);
       }
     } catch (error) {

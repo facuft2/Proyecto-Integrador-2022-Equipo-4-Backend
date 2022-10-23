@@ -52,21 +52,14 @@ const editUser = async ({
   nombre,
   apellido,
   email,
-  contrasenia,
-  ultimo_acceso,
-  nro_puerta,
-  localidad,
-  calle,
   descripcion,
   foto_perfil,
-  cant_intercambio,
-  tipo,
   telefono,
 }) => {
   try {
-    const hashedPassword = await bcrypt.hash(contrasenia, 10);
+    // const hashedPassword = await bcrypt.hash(contrasenia, 10);
 
-    const isPasswordChanged = contrasenia ? hashedPassword : null;
+    // const isPasswordChanged = contrasenia ? hashedPassword : null;
 
     const user = await prisma.Usuario.update({
       where: {
@@ -76,20 +69,12 @@ const editUser = async ({
         nombre,
         apellido,
         email,
-        contrasenia: isPasswordChanged,
-        ultimo_acceso,
-        nro_puerta,
-        localidad,
-        calle,
         descripcion,
         foto_perfil,
-        cant_intercambio,
-        tipo,
         telefono,
       },
     });
 
-    console.log(user)
     return user;
   } catch (error) {
     throw new Error(error);

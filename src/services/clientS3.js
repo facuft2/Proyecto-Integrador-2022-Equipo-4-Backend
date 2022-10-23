@@ -2,9 +2,9 @@
 const { S3, PutObjectCommand } = require("@aws-sdk/client-s3");
 const fs = require("fs");
 
-exports.s3Uploadv3 = async (file) => {
+exports.s3Uploadv3 = async (file, folder) => {
   const randomNum = Math.floor(Math.random() * 1000);
-  const key = `${randomNum}-${file.originalname}`;
+  const key = `${folder}/${randomNum}-${file.originalname}`;
   const endpoint = `https://reuso.nyc3.digitaloceanspaces.com/${key}`;
 
   const s3client = new S3({
