@@ -33,13 +33,14 @@ model Producto {
   titulo              String
   descripcion         String
   tipo_trato          TipoTrato
-  cantidad            Int @default(0)
+  cantidad            Int @default(1)
   foto                String @db.LongText
   usuario             Usuario? @relation(fields: [userId], references: [id])
   userId              Int
   categoria           CatProducto[]
   intercambioEnviado  Intercambio[] @relation("ProductoEnviado")
   intercambioRecibido Intercambio[] @relation("ProductoRecibido")
+  disponible          Boolean @default(true)
  }
 
 model Categoria {

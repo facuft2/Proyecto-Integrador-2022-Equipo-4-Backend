@@ -20,7 +20,10 @@ router.get(
   async ({ user }, res) => {
     try {
       const usuario = await getUserByProps({ id: user.id });
-      res.status(200).send(usuario);
+      
+      const formattedUsuario = { ...usuario, producto: usuario.producto.filter(producto => producto.cantidad !== 0 && producto)};
+
+      res.status(200).send(formattedUsuario);
     } catch (error) {
       res.json({ error: error.message });
     }
@@ -120,9 +123,11 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   async ({ params: { id } }, res) => {
     try {
-      const usuarios = await getUserByProps({ id: parseInt(id, 10) });
+      const usuario = await getUserByProps({ id: parseInt(id, 10) });
+      
+      const formattedUsuario = { ...usuario, producto: usuario.producto.filter(producto => producto.cantidad !== 0 && producto)};
 
-      res.status(200).send(usuarios);
+      res.status(200).send(formattedUsuario);
     } catch (error) {
       res.status(500).send({ error: error.message })
     }

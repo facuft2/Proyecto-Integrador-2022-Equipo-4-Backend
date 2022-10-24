@@ -85,6 +85,7 @@ async function main() {
             { nombre: 'Libros' },
             { nombre: 'Muebles' },
             { nombre: 'Mascotas' },
+            { nombre: 'Musica' },
             { nombre: 'Otros' },
         ]
     });

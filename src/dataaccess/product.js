@@ -36,15 +36,27 @@ const getProductsByCategory = async ({ userId }) => {
   try {
     const products = await prisma.categoria.findMany({
       where: {
+        AND: [{
         producto: {
           some: {
             producto: {
               isNot: {
-                userId
+                userId,
               }
-            }
+            },
           }
         }
+      }, {
+        producto: {
+          some: {
+            producto: {
+              isNot: {
+                cantidad: 0,
+              }
+            },
+          }
+        }
+      }]
       },
       select: {
         nombre: true,
@@ -60,6 +72,7 @@ const getProductsByCategory = async ({ userId }) => {
 
     return products
   } catch (error) {
+    console.log(error)
     throw new Error(error)
   }
 };
@@ -76,9 +89,16 @@ const getAllProducts = async ({ userId }) => {
         }
       },
       where: {
-        userId: {
-          not: userId
+        AND: [{
+          userId: {
+            not: userId
+          },
+        }, {
+          cantidad: {
+            not: 0
+          }
         }
+        ]
       },
     })
 
@@ -100,10 +120,10 @@ const getProductByFilter = async ({ searchText }) => {
           }
         ]
       }
-    })
+    });
+
     return product
   } catch (error) {
-    console.log(error)
     throw new Error(error)
   }
 }
@@ -115,23 +135,17 @@ const getProductById = async ({ id }) => {
     const product = await prisma.producto.findUnique({
       where: { id },
       include: {
-        usuario: true
+        usuario: {
+          select: {
+            nombre: true,
+            apellido: true,
+            email: true,
+            descripcion: true,
+            foto_perfil: true,
+            telefono: true,
+          }
+        }
       }
-      // include: {
-      // intercambioEnviado: true,
-      // intercambioRecibido: true,
-      // categoria: {
-      //   include: {
-      //     categoria: {
-      //       nombre: true,
-      //       id: false
-      //     },
-      //     id_prod: false,
-      //     id_cate: false,
-      //     producto: false
-      //   }
-      // }
-      // }
     })
 
     return product
@@ -144,12 +158,36 @@ const getMyProducts = async ({ userId }) => {
   try {
     const products = prisma.producto.findMany({
       where: {
-        userId
+        userId,
+        cantidad: {
+          not: 0
+        }
       }
     })
 
     return products
   } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const decrementCountProduct = async ({ id }) => {
+  try {
+    const product = await prisma.producto.update({
+      where: {
+        id
+      },
+      data: {
+        cantidad: {
+          decrement: 1
+        }
+      }
+    })
+
+    return product;
+  }
+  catch (error) {
+    console.log(error)
     throw new Error(error)
   }
 }
@@ -181,5 +219,6 @@ module.exports = {
   getAllProducts,
   getProductsByCategory,
   getProductByFilter,
-  updateProduct
+  updateProduct,
+  decrementCountProduct
 }

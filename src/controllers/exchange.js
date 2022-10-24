@@ -86,6 +86,13 @@ const editExchangeState = async ({ id, estado, userId }) => {
       }
 
       const editExchangeState = await exchangeDA.editState({ id, estado });
+      console.log(editExchangeState.estado === "ACEPTADO")
+
+      if (editExchangeState.estado === "ACEPTADO") {
+        await productDA.decrementCountProduct({id: editExchangeState.producto_enviado.id});
+        await productDA.decrementCountProduct({id: editExchangeState.producto_recibido.id});
+      }
+
       const formattedExchange = {...editExchangeState, tu_producto: editExchangeState.producto_enviado.userId === userId ? editExchangeState.producto_enviado : editExchangeState.producto_recibido, otro_producto: editExchangeState.producto_enviado.userId !== userId ? editExchangeState.producto_enviado : editExchangeState.producto_recibido}
 
       delete formattedExchange.producto_enviado

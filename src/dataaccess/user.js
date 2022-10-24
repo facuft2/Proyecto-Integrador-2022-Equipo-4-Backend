@@ -6,7 +6,13 @@ const bcrypt = require("bcrypt");
 const getUsers = async () => {
   try {
     return await prisma.Usuario.findMany({
-      include: {
+      select: {
+        nombre: true,
+        apellido: true,
+        email: true,
+        descripcion: true,
+        foto_perfil: true,
+        telefono: true,
         producto: true,
       }
     });
@@ -20,7 +26,13 @@ const getUserByProps = async (props) => {
   try {
     return await prisma.Usuario.findUnique({
       where: props,
-      include: {
+      select: {
+        nombre: true,
+        apellido: true,
+        email: true,
+        descripcion: true,
+        foto_perfil: true,
+        telefono: true,
         producto: true,
       }
     });
@@ -59,10 +71,6 @@ const editUser = async ({
   telefono,
 }) => {
   try {
-    // const hashedPassword = await bcrypt.hash(contrasenia, 10);
-
-    // const isPasswordChanged = contrasenia ? hashedPassword : null;
-
     const user = await prisma.Usuario.update({
       where: {
         id,
@@ -75,6 +83,14 @@ const editUser = async ({
         foto_perfil,
         telefono,
       },
+      select: {
+        nombre: true,
+        apellido: true,
+        email: true,
+        descripcion: true,
+        foto_perfil: true,
+        telefono: true,
+      }
     });
 
     return user;
