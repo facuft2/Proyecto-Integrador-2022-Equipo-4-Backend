@@ -5,21 +5,23 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const verifySid = process.env.TWILIO_VERIFY_SID;
 const client = require("twilio")(accountSid, authToken);
 
-client.verify.v2
-  .services(verifySid)
-  .verifications.create({ to: "+59895070400", channel: "sms" })
-  .then((verification) => console.log(verification.status))
-  .then(() => {
-    const readline = require("readline").createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
+const sendNumberVerification = async (number) => {
+  return client.verify.v2
+    .services(verifySid)
+    .verifications.create({
+      to: `+598${number}`,
+      channel: "sms",
+   });
+};
 
-    readline.question("Please enter the OTP:", (otpCode) => {
-      client.verify.v2
-        .services(verifySid)
-        .verificationChecks.create({ to: "+59895070400", code: otpCode })
-        .then((verification_check) => console.log(verification_check.status))
-        .then(() => readline.close());
-    });
-  });
+const verifyNumber = async (number, code) => {
+    return client.verify.v2
+      .services(verifySid)
+      .verificationChecks.create({
+        to: `+598${number}`,
+        code
+      })
+      .then((verification_check) => verification_check.status);
+};
+
+module.exports = { sendNumberVerification, verifyNumber };

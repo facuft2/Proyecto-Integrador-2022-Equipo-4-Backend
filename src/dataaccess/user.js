@@ -29,7 +29,7 @@ const getUserByProps = async (props) => {
   }
 }
 
-const createUser = async ({ nombre, apellido, email, contrasenia }) => {
+const createUser = async ({ nombre, apellido, email, contrasenia, foto_perfil, numero, descripcion }) => {
   try {
     const hashedPassword = await bcrypt.hash(contrasenia, 10);
 
@@ -39,7 +39,9 @@ const createUser = async ({ nombre, apellido, email, contrasenia }) => {
         apellido,
         email,
         contrasenia: hashedPassword,
-        foto_perfil: 'https://img.freepik.com/foto-gratis/feliz-positivo-emocionado-joven-apretando-punos-gritando-vistiendo-camiseta-roja-casual-teniendo-buenas-noticias-celebrando-su-victoria-o-exito-gana-loteria-concepto-emociones-personas_176532-8845.jpg?w=2000'
+        foto_perfil,
+        telefono: numero,
+        descripcion
       },
     });
   } catch (error) {

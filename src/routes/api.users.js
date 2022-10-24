@@ -9,6 +9,8 @@ const { RESULT_CODES } = require("../utils/index");
 const { getUsers, createUser, editUser } = require("../controllers/user");
 const { getUserByProps } = require("../dataaccess/user");
 const { s3Uploadv3 } = require("../services/clientS3");
+const { sendNumberVerification, verifyNumber } = require("../services/verificationTelephone");
+const userDA = require("../dataaccess/user");
 
 require('../middlewares/userAuth')
 
@@ -34,6 +36,8 @@ router.post(
       switch (code) {
         case RESULT_CODES.EMAIL_ALREADY_REGISTERED:
           return res.status(401).send({ error: code });
+        case RESULT_CODES.PHONE_ALREADY_REGISTERED: 
+          return res.status(401).send({ error: code })
         case RESULT_CODES.SUCCESS:
           const token = jwt.sign({ user }, process.env.SECRET_KEY, {});
           return res.status(201).header('Authorization', `Bearer ${token}`).send({ user })
@@ -47,8 +51,39 @@ router.post(
 );
 
 router.post(
+  "/verifynumber",
+  async ({ body }, res) => {
+    try {
+      if (await userDA.getUserByProps({ telefono: body.numero })) {
+        return res.status(401).send({ code: "El numero ya esta registrado" });
+      }
+      const number = await sendNumberVerification(body.numero)
+
+      res.status(200).send({ message: "Verification code sent" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+router.post(
+  "/verifycode",
+  async ({ body }, res) => {
+    try {
+      const verify = await verifyNumber(body.numero, body.code)
+
+      console.log('wtfff', verify)
+
+      res.status(200).send({ verify });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+router.post(
   "/imagen",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   multer({}).single("File"),
   async (req, res) => {
     try {

@@ -1,6 +1,6 @@
 module.exports = {
     type: 'object',
-    required: ['titulo', 'descripcion', 'categoria', 'foto', 'userId', 'cantidad'],
+    required: ['titulo', 'descripcion', 'categorias', 'foto', 'cantidad', 'tipo_trato'],
     properties: {
         titulo: {
             type: 'string',
@@ -8,7 +8,10 @@ module.exports = {
         descripcion: {
             type: 'string',
         },
-        categoria: {
+        tipo_trato: {
+            type: 'string'
+        },
+        categorias: {
             type: 'array',
             items: {
                 type: 'integer',
@@ -16,9 +19,6 @@ module.exports = {
         },
         foto: {
             type: 'string',
-        },
-        userId: {
-            type: 'integer',
         },
         cantidad: {
             type: 'number',

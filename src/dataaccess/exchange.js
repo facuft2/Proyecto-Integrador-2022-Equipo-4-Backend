@@ -98,6 +98,9 @@ const getMyExchangesByParams = async ({ userId, exchangeType }) => {
         producto_enviado: true,
         producto_recibido: true
       },
+      orderBy: {
+        estado: 'asc'
+      }
     })
 
     return exchange

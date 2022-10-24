@@ -9,18 +9,17 @@ const getUsers = async (req, res) => {
   }
 }
 
-const createUser = async ({ nombre, apellido, email, contrasenia }) => {
+const createUser = async (props) => {
   try {
-    if (await userDA.getUserByProps({ email })) {
+    if (await userDA.getUserByProps({ email: props.email })) {
       return { code: RESULT_CODES.EMAIL_ALREADY_REGISTERED };
     }
 
-    const user = await userDA.createUser({
-      nombre,
-      apellido,
-      email,
-      contrasenia,
-    })
+    if (await userDA.getUserByProps({ telefono: props.numero })) {
+      return { code: RESULT_CODES.PHONE_ALREADY_REGISTERED };
+    }
+
+    const user = await userDA.createUser(props)
 
     return {
       user: {

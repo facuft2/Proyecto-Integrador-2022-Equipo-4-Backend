@@ -1,6 +1,7 @@
 const RESULT_CODES = Object.freeze({
     SUCCESS: 'Success',
     EMAIL_ALREADY_REGISTERED: 'Ya existe un usuario registrado con ese email',
+    PHONE_ALREADY_REGISTERED: 'Ya existe un usuario registrado con ese numero de telefono',
     CATEGORY_ALREADY_REGISTERED: 'La categoria ya existe',
     PASSWORD_NO_MATCH: 'La contraseña no coincide',
     PASSWORD_MUST_HAVE_8_CHARACTERS: 'La contraseña debe tener al menos 8 caracteres',
