@@ -12,7 +12,8 @@ const generateRandomNumber = (min, max) => {
 
 const randomDealType = () => {
     const dealTypes = ['INTERCAMBIO', 'DONACION'];
-    return dealTypes[generateRandomNumber(0, 1)];
+    // return dealTypes[generateRandomNumber(0, 1)];
+    return 'INTERCAMBIO'
 };
 
 const password = 'password';

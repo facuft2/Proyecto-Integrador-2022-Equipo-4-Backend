@@ -18,6 +18,7 @@ const RESULT_CODES = Object.freeze({
     NOT_PRODUCT_OWNER: 'No eres el dueño del producto',
     NO_EXCHANGES: 'No tienes intercambios',
     INVALID_EXCHANGE_TYPE: 'El tipo de intercambio no es valido',
+    UNEXPECTED_ERROR: 'A ocurrido un error inesperado, intente de nuevo mas tarde'
   });
   
   module.exports = {

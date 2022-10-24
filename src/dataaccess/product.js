@@ -37,26 +37,28 @@ const getProductsByCategory = async ({ userId }) => {
     const products = await prisma.categoria.findMany({
       where: {
         AND: [{
-        producto: {
-          some: {
-            producto: {
-              isNot: {
-                userId,
-              }
-            },
+          producto: {
+            some: {
+              producto: {
+                isNot: {
+                  userId,
+                }
+              },
+            }
           }
         }
-      }, {
-        producto: {
-          some: {
-            producto: {
-              isNot: {
-                cantidad: 0,
-              }
-            },
+        , {
+          producto: {
+            some: {
+              producto: {
+                cantidad: {
+                  gt: 0
+                }
+              },
+            }
           }
         }
-      }]
+      ]
       },
       select: {
         nombre: true,
@@ -95,7 +97,7 @@ const getAllProducts = async ({ userId }) => {
           },
         }, {
           cantidad: {
-            not: 0
+            gt: 0
           }
         }
         ]
@@ -158,10 +160,13 @@ const getMyProducts = async ({ userId }) => {
   try {
     const products = prisma.producto.findMany({
       where: {
-        userId,
-        cantidad: {
-          not: 0
-        }
+        AND: [{
+          userId
+        }, {
+          cantidad: {
+            gt: 0
+          }
+        }]
       }
     })
 

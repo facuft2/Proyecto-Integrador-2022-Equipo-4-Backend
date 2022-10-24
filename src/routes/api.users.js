@@ -6,10 +6,10 @@ const multer = require('multer');
 const inputValidator = require("../middlewares/inputValidator");
 const validator = require('./validators/postUser');
 const { RESULT_CODES } = require("../utils/index");
-const { getUsers, createUser, editUser } = require("../controllers/user");
+const { createUser, editUser } = require("../controllers/user");
 const { getUserByProps } = require("../dataaccess/user");
 const { s3Uploadv3 } = require("../services/clientS3");
-const { sendNumberVerification, verifyNumber } = require("../services/verificationTelephone");
+const { sendNumberVerification, verifyNumber } = require("../services/verificationTelephone.js");
 const userDA = require("../dataaccess/user");
 
 require('../middlewares/userAuth')
@@ -61,6 +61,12 @@ router.post(
         return res.status(401).send({ code: "El numero ya esta registrado" });
       }
       const number = await sendNumberVerification(body.numero)
+
+      console.log(Boolean(number.status), number.status);
+
+      if(number.status !== 'pending' && number.status !== 200) {
+        return res.status(401).send({code: RESULT_CODES.UNEXPECTED_ERROR})
+      }
 
       res.status(200).send({ message: "Verification code sent" });
     } catch (error) {

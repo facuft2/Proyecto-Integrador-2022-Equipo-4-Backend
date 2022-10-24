@@ -6,12 +6,16 @@ const verifySid = process.env.TWILIO_VERIFY_SID;
 const client = require("twilio")(accountSid, authToken);
 
 const sendNumberVerification = async (number) => {
-  return client.verify.v2
+  try {
+  return await client.verify.v2
     .services(verifySid)
     .verifications.create({
       to: `+598${number}`,
-      channel: "sms",
+      channel: "whatsapp",
    });
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 const verifyNumber = async (number, code) => {
