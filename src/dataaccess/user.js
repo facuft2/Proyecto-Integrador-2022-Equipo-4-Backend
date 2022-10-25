@@ -34,6 +34,7 @@ const getUserByProps = async (props) => {
         foto_perfil: true,
         telefono: true,
         producto: true,
+        cant_intercambio: true,
       }
     });
   } catch (error) {
@@ -99,9 +100,30 @@ const editUser = async ({
   }
 }
 
+const incrementExchangeCount = async ({ id }) => {
+  try {
+    const user = await prisma.Usuario.update({
+      where: {
+        id,
+      },
+      data: {
+        cant_intercambio: {
+          increment: 1,
+        },
+      },
+    });
+
+    return user;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+
 module.exports = {
   getUsers,
   createUser,
   getUserByProps,
   editUser,
+  incrementExchangeCount,
 }

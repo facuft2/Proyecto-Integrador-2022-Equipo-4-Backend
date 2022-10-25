@@ -46,19 +46,7 @@ const getProductsByCategory = async ({ userId }) => {
               },
             }
           }
-        }
-        , {
-          producto: {
-            some: {
-              producto: {
-                cantidad: {
-                  gt: 0
-                }
-              },
-            }
-          }
-        }
-      ]
+        }]
       },
       select: {
         nombre: true,
@@ -117,7 +105,7 @@ const getProductByFilter = async ({ searchText }) => {
         OR: [
           {
             titulo: {
-              contains: searchText,
+              startsWith: searchText,
             }
           }
         ]

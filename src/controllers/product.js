@@ -79,18 +79,16 @@ const getProductById = async ({ id }) => {
   }
 }
 
-const getProductByFilter = async ({ searchText }) => {
+const getProductByFilter = async ({ searchText, userId }) => {
   try {
-    const product = await ProductDA.getProductByFilter({ searchText });
+    const products = await ProductDA.getProductByFilter({ searchText });
 
-    if (!product) {
-      return {
-        code: RESULT_CODES.PRODUCT_NOT_FOUND,
-      }
-    }
+    const productFiltered = products.map((producto) => (
+      (producto.userId !== userId) && (producto.cantidad > 0) ? producto : []
+    )).flat()
 
     return {
-      product,
+      products: productFiltered,
       code: RESULT_CODES.SUCCESS
     }
   } catch (error) {
@@ -105,12 +103,14 @@ const getProductsByCategory = async ({ userId }) => {
     const cleanProd = products.map(({ nombre, producto }) => ({
       categoria: nombre,
       producto: producto.map(({ producto }) => (
-        producto.userId !== userId ? producto : []
+        (producto.userId !== userId) && (producto.cantidad > 0) ? producto : []
       )).flat()
     }))
 
+    const cleanCat = cleanProd.map(({categoria, producto}) => (producto.length > 0 ? {categoria, producto} : [])).flat();
+
     return {
-      Productos: cleanProd,
+      Productos: cleanCat,
       code: RESULT_CODES.SUCCESS
     }
   } catch (error) {

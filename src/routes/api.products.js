@@ -110,13 +110,13 @@ router.get(
 );
 
 router.get(
-  "/filter/:param",
+  "/filter/:text",
   passport.authenticate("jwt", { session: false }),
-  async (_, res) => {
+  async ({params, user}, res) => {
     try {
-      const product = await getProductByFilter();
+      const product = await getProductByFilter({searchText: params.text, userId: user.id});
 
-      res.status(200).send({ product });
+      res.status(200).send(product);
     } catch (error) {
       res.json({ error: error.message });
     }

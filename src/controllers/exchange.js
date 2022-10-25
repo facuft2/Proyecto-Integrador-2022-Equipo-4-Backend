@@ -1,5 +1,6 @@
 const exchangeDA = require("../dataaccess/exchange");
 const productDA = require("../dataaccess/product");
+const userDA = require("../dataaccess/user");
 
 const { RESULT_CODES } = require("../utils/index");
 
@@ -86,9 +87,10 @@ const editExchangeState = async ({ id, estado, userId }) => {
       }
 
       const editExchangeState = await exchangeDA.editState({ id, estado });
-      console.log(editExchangeState.estado === "ACEPTADO")
 
       if (editExchangeState.estado === "ACEPTADO") {
+        await userDA.incrementExchangeCount({ id: exchange.producto_enviado.userId });
+        await userDA.incrementExchangeCount({ id: exchange.producto_recibido.userId });
         await productDA.decrementCountProduct({id: editExchangeState.producto_enviado.id});
         await productDA.decrementCountProduct({id: editExchangeState.producto_recibido.id});
       }
