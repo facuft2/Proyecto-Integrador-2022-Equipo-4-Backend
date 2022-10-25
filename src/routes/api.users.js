@@ -92,7 +92,6 @@ router.post(
 
 router.post(
   "/imagen",
-  // passport.authenticate("jwt", { session: false }),
   multer({}).single("File"),
   async (req, res) => {
     try {

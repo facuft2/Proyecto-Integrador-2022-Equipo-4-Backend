@@ -6,6 +6,7 @@ exports.s3Uploadv3 = async (file, folder) => {
   const randomNum = Math.floor(Math.random() * 1000);
   const key = `${folder}/${randomNum}-${file.originalname}`;
   const endpoint = `https://reuso.nyc3.digitaloceanspaces.com/${key}`;
+  console.log(file)
 
   const s3client = new S3({
     forcePathStyle: false,
@@ -20,7 +21,7 @@ exports.s3Uploadv3 = async (file, folder) => {
   const param = {
     Bucket: process.env.SPACES_NAME,
     Key: key ,
-    Permissions: "public-read",
+    // Permissions: "public-read",
     Body: file.buffer,
     ContentType: file.mimetype,
     ACL: "public-read"
